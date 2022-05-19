@@ -1,0 +1,262 @@
+---
+title: "BranchGLM Vignette"
+output: 
+  rmarkdown::html_vignette:
+    toc: TRUE
+    number_sections: TRUE
+
+vignette: >
+  %\VignetteIndexEntry{BranchGLM Vignette}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# Description
+
+**BranchGLM** is a package for fitting glms and performing variable selection. 
+Most functions in this package make use of RcppArmadillo 
+and some of them can also make use of OpenMP to perform parallel computations. 
+This vignette introduces the package, provides examples on how to use the 
+main functions in the package and also briefly describes the methods employed by the 
+functions.
+
+# Installation
+
+**BranchGLM** can be installed using the `install_github()` function from the 
+**devtools** package.
+
+```{r, eval = FALSE}
+
+devtools::install_github("JacobSeedorff21/BranchGLM")
+
+```
+
+# Fitting glms
+
+- `BranchGLM()` allows fitting of gaussian, binomial, and poisson glms with a variety of links available.  
+- Parallel computation can also be done to speed up the fitting process, but it is only useful for larger datasets.
+
+## Optimization methods
+
+- The optimization method can be specified, the default method is fisher scoring, but BFGS and L-BFGS are also available. 
+- BFGS and L-BFGS typically perform better when there are many predictors in the model (at least 30 predictors), otherwise fisher scoring is typically faster.  
+- The `grads` argument is for L-BFGS only and it is the number of gradients that are stored at a time and are used to approximate the inverse hessian. The default value for this is 10, but another common choice is 5.
+- The `tol` argument controls how strict the convergence criteria are, higher tolerance will lead to more accurate results, but may also be slower.
+- All methods should converge in 1 iteration for linear regression.
+
+## Examples
+
+- An offset can be specified using `offset`, it should be a numeric vector.
+
+```{r}
+### Using mtcars
+
+library(BranchGLM)
+
+cars <- mtcars
+
+### Fitting linear regression model with Fisher scoring
+
+carsFit <- BranchGLM(mpg ~ ., data = cars, family = "gaussian", link = "identity")
+
+carsFit
+
+### Fitting linear regression with LBFGS
+
+LBFGSFit <- BranchGLM(mpg ~ ., data = cars, family = "gaussian", link = "identity",
+                      method = "LBFGS", grads = 5)
+
+LBFGSFit
+
+```
+
+## Useful functions
+
+- **BranchGLM** also has many utility functions for glms such as
+  - `coef()` to extract the coefficients
+  - `logLik()` to extract the log likelihood
+  - `AIC()` to extract the AIC
+  - `BIC()` to extract the BIC
+  - `predict()` to obtain predictions from the fitted model
+- The coefficients, standard errors, wald test statistics, and p-values are stored in the `coefficients` slot of the fitted model
+- Unlike glm there is no summary method, all the important information is included in the `BranchGLM` object.
+
+```{r}
+### Predict method
+
+predict(carsFit)
+
+### Accessing coefficients matrix
+
+carsFit$coefficients
+
+```
+
+# Performing variable selection
+
+- Forward selection, backward elimination, and branch and bound selection can be done using `VariableSelection()`.
+- `VariableSelection()` can accept either a `BranchGLM` object or a formula along with the data and the desired family and link to perform the variable selection.
+- Available metrics are AIC and BIC, which are used to compare models and to select the best model.
+- `VariableSelection()` returns the final model and some other information about the search.
+- Note that `VariableSelection()` will not properly handle interaction terms, i.e. it may keep an interaction term while removing the lower-order terms.
+- `keep` can also be specified if any set of variables are desired to be kept in every model.
+
+## Stepwise methods
+
+- Forward selection and backward elimination are both stepwise variable selection methods.
+- They are not guaranteed to find the best model or even a good model, but they are very fast.
+- Forward selection is recommended if the number of variables is greater than the number of observations or if many of the larger models don't converge.
+- Parallel computation is not available for these methods because they should be fast enough without it.
+
+### Forward selection example
+
+```{r}
+### Forward selection with mtcars
+
+VariableSelection(carsFit, type = "forward")
+
+```
+
+### Backward elimination example
+
+```{r}
+### Backward elimination with mtcars
+
+VariableSelection(carsFit, type = "backward")
+
+```
+
+## Branch and bound
+
+- Branch and bound is much slower than the other methods, but it is guaranteed to find the best model.
+- The branch and bound method can be much faster than an exhaustive search and can also be made many times faster if parallel computation is used.
+- One way to judge how much faster the branch and bound algorithm is compared to an exhaustive search is to look at the ratio of the number of models fit against the total number of possible models.
+  - If this ratio is close to 1, then it is performing poorly and has to fit almost every model, if it is close to 0, then it is performing well and ruled out many models without having to fit them.
+
+### Branch and bound example
+
+- If `showprogress` is true, then progress of the branch and bound algorithm will be reported occasionally.
+- Parallel computation can be used with this method and can lead to very large speedups.
+
+```{r}
+### Branch and bound with mtcars
+
+VariableSelection(carsFit, type = "branch and bound", showprogress = FALSE)
+
+### Can also use a formula and data
+
+FormulaVS <- VariableSelection(mpg ~ . ,data = cars, family = "gaussian", 
+                               link = "identity", type = "branch and bound",
+                               showprogress = FALSE)
+
+### Number of models fit divided by the number of possible models
+
+FormulaVS$numchecked / 2^(length(FormulaVS$variables))
+
+### Extracting final model
+
+FormulaVS$finalmodel
+
+```
+
+## Using keep
+
+- Specifying variables via `keep` will ensure that those variables are kept through the selection process.
+
+```{r}
+### Example of using keep
+
+VariableSelection(mpg ~ . ,data = cars, family = "gaussian", 
+                               link = "identity", type = "branch and bound",
+                               keep = c("hp", "cyl"), metric = "BIC",
+                               showprogress = FALSE)
+
+```
+
+## Convergence issues
+
+- It is not recommended to use branch and bound if the upper models do not converge since it can make the algorithm very slow.
+- Sometimes when using backwards selection and all the upper models that are tested 
+do not converge, no final model can be selected.
+- For these reasons, if there are convergence issues it is recommended to use forward selection.
+
+# Utility functions for binomial glms
+
+- **BranchGLM** also has some utility functions for binomial glms
+  - `Table()` creates a confusion matrix based on the predicted classes and observed classes
+  - `ROC()` creates an ROC curve which can be plotted with `plot()`
+  - `AUC()` and `Cindex()` calculate the area under the ROC curve
+  - `MultipleROCCurves()` allows for the plotting of multiple ROC curves on the same plot
+
+## Table
+
+```{r}
+### Predicting if a car gets at least 18 mpg
+
+catData <- ToothGrowth
+
+catFit <- BranchGLM(supp ~ ., data = catData, family = "binomial", link = "logit")
+
+Table(catFit)
+
+```
+
+## ROC
+
+```{r}
+
+catROC <- ROC(catFit)
+
+plot(catROC, main = "ROC Curve", col = "indianred")
+
+```
+
+## Cindex/AUC
+
+```{r}
+
+Cindex(catFit)
+
+AUC(catFit)
+
+```
+
+## MultipleROCPlots
+
+```{r, fig.width = 4, fig.height = 4}
+### Showing ROC plots for logit, probit, and cloglog
+
+probitFit <- BranchGLM(supp ~ . ,data = catData, family = "binomial", 
+                       link = "probit")
+
+cloglogFit <- BranchGLM(supp ~ . ,data = catData, family = "binomial", 
+                       link = "cloglog")
+
+MultipleROCCurves(catROC, ROC(probitFit), ROC(cloglogFit), 
+                  names = c("Logistic ROC", "Probit ROC", "Cloglog ROC"))
+
+```
+
+## Using predictions
+
+- For each of the methods used in this section predicted probabilities and observed
+classes can also be supplied instead of the `BranchGLM` object.
+
+```{r}
+
+preds <- predict(catFit)
+
+Table(preds, catData$supp)
+
+AUC(preds, catData$supp)
+
+ROC(preds, catData$supp) |> plot(main = "ROC Curve", col = "deepskyblue")
+
+```
