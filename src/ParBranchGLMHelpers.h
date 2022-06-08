@@ -31,6 +31,8 @@ arma::vec ParLBFGSHelperCpp(arma::vec* g1, arma::mat* s, arma::mat* y,
                          unsigned int* k, unsigned int* m, 
                          arma::vec* r, arma::vec* alpha, const arma::mat* Info);
 
+
+
 int ParLBFGSGLMCpp(arma::vec* beta, const arma::mat* X, 
                    const arma::vec* Y, const arma::vec* Offset,
                    std::string Link, std::string Dist, 
@@ -48,8 +50,10 @@ int ParFisherScoringGLMCpp(arma::vec* beta, const arma::mat* X,
                                double tol, int maxit, 
                                double C1 = pow(10, -4));
 
-List ParBranchGLMFitCpp(const arma::mat* X, const arma::vec* Y, const arma::vec* Offset,
-                std::string method,  unsigned int m, std::string Link, std::string Dist,
-                unsigned int nthreads, double tol, int maxit);
+int ParLinRegCppShort(arma::vec* beta, const arma::mat* x, const arma::mat* y,
+              const arma::vec* offset);
+
+void PargetInit(arma::vec* beta, const arma::mat* X, const arma::vec* Y, 
+             const arma::vec* Offset, std::string Dist, std::string Link);
 
 #endif

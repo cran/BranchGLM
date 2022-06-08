@@ -2,9 +2,9 @@
 #' @param object a formula or a \code{BranchGLM} object.
 #' @param ... further arguments passed to other methods.
 #' @param data a dataframe with the response and predictor variables.
-#' @param family distribution used to model the data, one of "gaussian", "binomial", or "poisson".
-#' @param link link used to link mean structure to linear predictors. One of, 
-#' "identity", "logit", "probit", "cloglog", or "log".
+#' @param family distribution used to model the data, one of "gaussian", "gamma", "binomial", or "poisson".
+#' @param link link used to link mean structure to linear predictors. One of
+#' "identity", "logit", "probit", "cloglog", "sqrt", "inverse", or "log".
 #' @param offset offset vector, by default the zero vector is used.
 #' @param method one of "Fisher", "BFGS", or "LBFGS". Fisher's scoring is recommended
 #' for forward selection and branch and bound selection since they will typically 
@@ -17,8 +17,7 @@
 #' default is the total number of variables.
 #' This number adds onto any variables specified in keep. 
 #' @param grads number of gradients used to approximate inverse information with, only for \code{method = "LBFGS"}.
-#' @param parallel one of TRUE or FALSE to indicate if parallelization should be used.
-#' Only available for branch and bound selection.
+#' @param parallel one of TRUE or FALSE to indicate if parallelization should be used
 #' @param nthreads number of threads used with OpenMP, only used if \code{parallel = TRUE}.
 #' @param tol tolerance used to determine model convergence.
 #' @param maxit maximum number of iterations performed. The default for 
@@ -30,7 +29,10 @@
 #' @details The model in the formula or the formula from the fitted model is 
 #' treated as the upper model. The variables specified in keep along with an 
 #' intercept (if included in formula) is the lower model. When an intercept is 
-#' included in the model formula it is kept in each model.
+#' included in the model formula it is kept in each model. Interaction terms 
+#' are not properly handled, i.e. an interaction term may be kept while removing 
+#' the lower-order terms. Factor variables are either kept in their entirety or 
+#' entirely removed.
 #' 
 #' The branch and bound method makes use of an efficient branch and bound algorithm 
 #' to find the optimal model. This is will find the best model according to the metric, but 
@@ -78,6 +80,7 @@ VarFormulaHelper <- function(formula, data, family, link, offset = NULL,
                              grads = 10, parallel = FALSE, 
                              nthreads = 8, tol = 1e-4, maxit = NULL,
                              contrasts = NULL, ...){
+  
   ### Creating pseudo BranchGLM object to put into VariableSelection.BranchGLM
   if(!is(formula, "formula")){
     stop("formula must be a valid formula")
@@ -88,11 +91,11 @@ VarFormulaHelper <- function(formula, data, family, link, offset = NULL,
   if(length(method) != 1 || !(method %in% c("Fisher", "BFGS", "LBFGS"))){
     stop("method must be exactly one of 'Fisher', 'BFGS', or 'LBFGS'")
   }
-  if(!family %in% c("gaussian", "binomial", "poisson")){
-    stop("family must be one of 'gaussian', 'binomial', or 'poisson'")
+  if(!family %in% c("gaussian", "binomial", "poisson", "gamma")){
+    stop("family must be one of 'gaussian', 'binomial', 'gamma', or 'poisson'")
   }
-  if(!link %in% c("logit", "probit", "cloglog", "log", "identity")){
-    stop("link must be one of 'logit', 'probit', 'cloglog', 'log', or 'identity'")
+  if(!link %in% c("logit", "probit", "cloglog", "log", "identity", "inverse", "sqrt")){
+    stop("link must be one of 'logit', 'probit', 'cloglog', 'log', 'inverse', 'sqrt', or 'identity'")
   }
   mf <- match.call(expand.dots = FALSE)
   m <- match(c("formula", "data"), names(mf), 0L)
@@ -101,9 +104,12 @@ VarFormulaHelper <- function(formula, data, family, link, offset = NULL,
   mf[[1L]] <- as.name("model.frame")
   mf <- eval(mf, parent.frame())
   y <- model.response(mf, "any")
-  ## Checking y variable for each family
+  
+  ## Checking y variable and link function for each family
   if(family == "binomial"){
-    if(is.factor(y) && (nlevels(y) == 2)){
+    if(!(link %in% c("cloglog", "log", "logit", "probit"))){
+      stop("valid link functions for binomial regression are 'cloglog', 'log', 'logit', and 'probit'")
+    }else if(is.factor(y) && (nlevels(y) == 2)){
       ylevel <- levels(y)
       y <- as.numeric(y == ylevel[2])
     }else if(is.numeric(y) && all(y %in% c(0, 1))){
@@ -116,14 +122,25 @@ VarFormulaHelper <- function(formula, data, family, link, offset = NULL,
       0s and 1s, a two-level factor, or a logical vector")
     }
   }else if(family == "poisson"){
-    if(!is.numeric(y) || any(y < 0)){
+    if(!(link %in% c("identity", "log", "sqrt"))){
+      stop("valid link functions for poisson regression are 'identity', 'log', and 'sqrt'")
+    }else if(!is.numeric(y) || any(y < 0)){
       stop("response variable for poisson regression must be a numeric vector of non-negative integers")
     }else if(any(as.integer(y)!= y)){
       stop("response variable for poisson regression must be a numeric vector of non-negative integers")
     }
   }else if(family == "gaussian"){
-    if(!is.numeric(y)){
+    if(!(link %in% c("inverse", "identity", "log", "sqrt"))){
+      stop("valid link functions for gaussian regression are 'identity', 'inverse', 'log', and 'sqrt'")
+    }else if(!is.numeric(y)){
       stop("response variable for gaussian regression must be numeric")
+    }
+  }else if(family == "gamma"){
+    if(!(link %in% c("inverse", "identity", "log", "sqrt"))){
+      stop("valid link functions for gamma regression are 'identity', 'inverse', 'log', and 'sqrt'")
+    }
+    if(!is.numeric(y) || any(y <= 0)){
+      stop("response variable for gamma regression must be positive")
     }
   }
   
@@ -201,6 +218,12 @@ VariableSelection.BranchGLM <- function(object, type = "forward", metric = "AIC"
                                         method = "Fisher", grads = 10, parallel = FALSE, 
                                         nthreads = 8, tol = 1e-4, maxit = NULL,
                                         showprogress = TRUE, ...){
+  
+  ## Checking if supplied BranchGLM object has x and data
+  if(is.null(object$data) || is.null(object$x)){
+    stop("the supplied model must have a data and an x component")
+  }
+    
   ## Performing argument checks
   if(length(parallel) > 1 || !is.logical(parallel)){
     stop("parallel must be either TRUE or FALSE")
@@ -282,15 +305,9 @@ VariableSelection.BranchGLM <- function(object, type = "forward", metric = "AIC"
                       object$link, object$family, nthreads, tol, maxit, keep, maxsize, 
                       metric)
   }else if(type == "branch and bound"){
-    if(parallel){
-      df <- ParBranchAndBoundCpp(object$x, object$y, object$offset, indices, counts, method, grads,
-                                        object$link, object$family, nthreads, tol, maxit, keep, maxsize, 
-                                        metric, showprogress)
-    }else{
-      df <- BranchAndBoundCpp(object$x, object$y, object$offset, indices, counts, method, grads,
+    df <- BranchAndBoundCpp(object$x, object$y, object$offset, indices, counts, method, grads,
                                       object$link, object$family, nthreads, tol, maxit, keep, maxsize, 
                                       metric, showprogress)
-    }
   }else{
     stop("type must be one of 'forward', 'backward', or 'branch and bound'")
   }
@@ -322,18 +339,20 @@ VariableSelection.BranchGLM <- function(object, type = "forward", metric = "AIC"
       as.formula()
   }
   
-  df$fit$x <- model.matrix(df$fit$formula, object$data, object$contrasts)
+  x <- model.matrix(df$fit$formula, object$data, object$contrasts)
+  
+  df$fit$numobs <- nrow(x)
   
   df$fit$y <- object$y
   
-  row.names(df$fit$coefficients) <- colnames(df$fit$x)
+  row.names(df$fit$coefficients) <- colnames(x)
   
-  df$fit$names <- attributes(terms(df$fit$formula, data = df$fit$x))$factors |>
+  df$fit$names <- attributes(terms(df$fit$formula, data = x))$factors |>
     colnames()
   
   df$fit$yname <- object$yname
   
-  df$fit$parallel <- (parallel != FALSE)
+  df$fit$parallel <- parallel
   
   df$fit$missing <- object$missing
   

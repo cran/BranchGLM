@@ -52,10 +52,10 @@ VariableSelection(object, ...)
 
 \item{data}{a dataframe with the response and predictor variables.}
 
-\item{family}{distribution used to model the data, one of "gaussian", "binomial", or "poisson".}
+\item{family}{distribution used to model the data, one of "gaussian", "gamma", "binomial", or "poisson".}
 
-\item{link}{link used to link mean structure to linear predictors. One of, 
-"identity", "logit", "probit", "cloglog", or "log".}
+\item{link}{link used to link mean structure to linear predictors. One of
+"identity", "logit", "probit", "cloglog", "sqrt", "inverse", or "log".}
 
 \item{offset}{offset vector, by default the zero vector is used.}
 
@@ -76,8 +76,7 @@ This number adds onto any variables specified in keep.}
 
 \item{grads}{number of gradients used to approximate inverse information with, only for \code{method = "LBFGS"}.}
 
-\item{parallel}{one of TRUE or FALSE to indicate if parallelization should be used.
-Only available for branch and bound selection.}
+\item{parallel}{one of TRUE or FALSE to indicate if parallelization should be used}
 
 \item{nthreads}{number of threads used with OpenMP, only used if \code{parallel = TRUE}.}
 
@@ -109,7 +108,10 @@ and branch and bound selection for generalized linear models.
 The model in the formula or the formula from the fitted model is 
 treated as the upper model. The variables specified in keep along with an 
 intercept (if included in formula) is the lower model. When an intercept is 
-included in the model formula it is kept in each model.
+included in the model formula it is kept in each model. Interaction terms 
+are not properly handled, i.e. an interaction term may be kept while removing 
+the lower-order terms. Factor variables are either kept in their entirety or 
+entirely removed.
 
 The branch and bound method makes use of an efficient branch and bound algorithm 
 to find the optimal model. This is will find the best model according to the metric, but 

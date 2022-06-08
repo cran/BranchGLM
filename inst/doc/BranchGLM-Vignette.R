@@ -18,49 +18,49 @@ cars <- mtcars
 
 ### Fitting linear regression model with Fisher scoring
 
-carsFit <- BranchGLM(mpg ~ ., data = cars, family = "gaussian", link = "identity")
+LinearFit <- BranchGLM(mpg ~ ., data = cars, family = "gaussian", link = "identity")
 
-carsFit
+LinearFit
 
-### Fitting linear regression with LBFGS
+### Fitting gamma regression with inverse link with L-BFGS
 
-LBFGSFit <- BranchGLM(mpg ~ ., data = cars, family = "gaussian", link = "identity",
+GammaFit <- BranchGLM(mpg ~ ., data = cars, family = "gamma", link = "inverse",
                       method = "LBFGS", grads = 5)
 
-LBFGSFit
+GammaFit
 
 
 ## -----------------------------------------------------------------------------
 ### Predict method
 
-predict(carsFit)
+predict(GammaFit)
 
 ### Accessing coefficients matrix
 
-carsFit$coefficients
+GammaFit$coefficients
 
 
 ## -----------------------------------------------------------------------------
 ### Forward selection with mtcars
 
-VariableSelection(carsFit, type = "forward")
+VariableSelection(GammaFit, type = "forward")
 
 
 ## -----------------------------------------------------------------------------
 ### Backward elimination with mtcars
 
-VariableSelection(carsFit, type = "backward")
+VariableSelection(GammaFit, type = "backward")
 
 
 ## -----------------------------------------------------------------------------
 ### Branch and bound with mtcars
 
-VariableSelection(carsFit, type = "branch and bound", showprogress = FALSE)
+VariableSelection(GammaFit, type = "branch and bound", showprogress = FALSE)
 
 ### Can also use a formula and data
 
-FormulaVS <- VariableSelection(mpg ~ . ,data = cars, family = "gaussian", 
-                               link = "identity", type = "branch and bound",
+FormulaVS <- VariableSelection(mpg ~ . ,data = cars, family = "gamma", 
+                               link = "inverse", type = "branch and bound",
                                showprogress = FALSE)
 
 ### Number of models fit divided by the number of possible models
@@ -75,9 +75,9 @@ FormulaVS$finalmodel
 ## -----------------------------------------------------------------------------
 ### Example of using keep
 
-VariableSelection(mpg ~ . ,data = cars, family = "gaussian", 
-                               link = "identity", type = "branch and bound",
-                               keep = c("hp", "cyl"), metric = "BIC",
+VariableSelection(mpg ~ . ,data = cars, family = "gamma", 
+                               link = "inverse", type = "branch and bound",
+                               keep = c("hp", "cyl"), metric = "AIC",
                                showprogress = FALSE)
 
 

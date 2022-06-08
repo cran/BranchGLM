@@ -1,19 +1,25 @@
 #' Fits GLMs
 #' @param formula a formula for the model.
 #' @param data a dataframe that contains the response and predictor variables.
-#' @param family distribution used to model the data, one of "gaussian", "binomial", or "poisson".
-#' @param link link used to link mean structure to linear predictors. One of, 
-#' "identity", "logit", "probit", "cloglog", or "log".
+#' @param family distribution used to model the data, one of "gaussian", "gamma", "binomial", or "poisson".
+#' @param link link used to link mean structure to linear predictors. One of
+#' "identity", "logit", "probit", "cloglog", "sqrt", "inverse", or "log".
 #' @param offset offset vector, by default the zero vector is used.
 #' @param method one of "Fisher", "BFGS", or "LBFGS". BFGS and L-BFGS are 
 #' quasi-newton methods which are typically faster than Fisher's scoring when
-#' there are many covariates (at least 30).
-#' @param grads number of gradients used to approximate information with, only for \code{method = "LBFGS"}.
+#' there are many covariates (at least 50).
+#' @param grads number of gradients used to approximate inverse information with, only for \code{method = "LBFGS"}.
 #' @param parallel whether or not to make use of parallelization via OpenMP.
 #' @param nthreads number of threads used with OpenMP, only used if \code{parallel = TRUE}.
 #' @param tol tolerance used to determine model convergence.
 #' @param maxit maximum number of iterations performed. The default for 
 #' Fisher's scoring is 50 and for the other methods the default is 200.
+#' @param init initial values for the betas, if not specified then they are automatically 
+#' selected.
+#' @param keepData Whether or not to store a copy of data and design matrix, the default 
+#' is TRUE. If this is false, then this cannot be used inside of \code{VariableSelection}.
+#' @param keepY Whether or not to store a copy of y, the default is TRUE. If 
+#' this is FALSE, then the binomial GLM helper functions may not work.
 #' @param contrasts see \code{contrasts.arg} of \code{model.matrix.default}.
 #' @return A \code{BranchGLM} object which is a list with the following components
 #' \item{\code{coefficients}}{ a matrix with the coefficients estimates, SEs, wald test statistics, and p-values}
@@ -26,9 +32,10 @@
 #' \item{\code{linpreds}}{ linear predictors from the fitted model}
 #' \item{\code{formula}}{ formula used to fit the model}
 #' \item{\code{method}}{ iterative method used to fit the model}
-#' \item{\code{y}}{ y vector used in the model}
-#' \item{\code{x}}{ design matrix used to fit the model}
-#' \item{\code{data}}{ original dataframe supplied to the function}
+#' \item{\code{y}}{ y vector used in the model, not included if \code{keepY = FALSE}}
+#' \item{\code{x}}{ design matrix used to fit the model, not included if \code{keepData = FALSE}}
+#' \item{\code{data}}{ original dataframe supplied to the function, not included if \code{keepData = FALSE}}
+#' \item{\code{numobs}}{ number of observations in the design matrix}
 #' \item{\code{names}}{ names of the variables}
 #' \item{\code{yname}}{ name of y variable}
 #' \item{\code{parallel}}{ whether parallelization was employed to speed up model fitting process}
@@ -40,8 +47,8 @@
 #' @description Fits generalized linear models via RcppArmadillo. Also has the 
 #' ability to fit the models with parallelization via OpenMP.
 #' @details Can use BFGS, L-BFGS, or Fisher's scoring to fit the GLM. BFGS and L-BFGS are 
-#' typically faster than Fisher's scoring when there are at least 30 covariates 
-#' and Fisher's scoring is typically best when there are fewer than 30 covariates.
+#' typically faster than Fisher's scoring when there are at least 50 covariates 
+#' and Fisher's scoring is typically best when there are fewer than 50 covariates.
 #' This function does not currently support the use of weights. 
 #' 
 #' The models are fit in C++ by using Rcpp and RcppArmadillo. In order to help 
@@ -54,7 +61,11 @@
 #' converge, then \code{iterations} will be -1.
 #' 
 #' The likelihood equations are solved directly, i.e. no matrix decomposition is used.
-#' All observations with any missing values are ignored.
+#' All observations with any missing values are ignored. The \code{method} argument 
+#' is ignored for linear regression and the OLS solution is used.
+#' 
+#' The dispersion parameter for gamma regression is estimated via maximum likelihood, 
+#' very similar to the \code{gamma.dispersion} function from the MASS package.
 #' @examples
 #' Data <- iris
 #' BranchGLM(Sepal.Length ~ ., data = Data, family = "gaussian", link = "identity")
@@ -62,7 +73,9 @@
 
 BranchGLM <- function(formula, data, family, link, offset = NULL, 
                     method = "Fisher", grads = 10, parallel = FALSE, nthreads = 8, 
-                    tol = 1e-4, maxit = NULL, contrasts = NULL){
+                    tol = 1e-4, maxit = NULL, init = NULL, 
+                    contrasts = NULL, keepData = TRUE,
+                    keepY = TRUE){
   
   if(!is(formula, "formula")){
     stop("formula must be a valid formula")
@@ -73,11 +86,11 @@ BranchGLM <- function(formula, data, family, link, offset = NULL,
   if(length(method) != 1 || !(method %in% c("Fisher", "BFGS", "LBFGS"))){
     stop("method must be exactly one of 'Fisher', 'BFGS', or 'LBFGS'")
   }
-  if(!family %in% c("gaussian", "binomial", "poisson")){
-    stop("family must be one of 'gaussian', 'binomial', or 'poisson'")
+  if(!family %in% c("gaussian", "binomial", "poisson", "gamma")){
+    stop("family must be one of 'gaussian', 'binomial', 'gamma', or 'poisson'")
   }
-  if(!link %in% c("logit", "probit", "cloglog", "log", "identity")){
-    stop("link must be one of 'logit', 'probit', 'cloglog', 'log', or 'identity'")
+  if(!link %in% c("logit", "probit", "cloglog", "log", "identity", "inverse", "sqrt")){
+    stop("link must be one of 'logit', 'probit', 'cloglog', 'log', 'inverse', 'sqrt', or 'identity'")
   }
   mf <- match.call(expand.dots = FALSE)
   m <- match(c("formula", "data"), names(mf), 0L)
@@ -98,9 +111,11 @@ BranchGLM <- function(formula, data, family, link, offset = NULL,
     stop("maxit must be a non-negative integer")
   }
   
-  ## Checking y variable for each family
+  ## Checking y variable and link function for each family
   if(family == "binomial"){
-    if(is.factor(y) && (nlevels(y) == 2)){
+    if(!(link %in% c("cloglog", "log", "logit", "probit"))){
+      stop("valid link functions for binomial regression are 'cloglog', 'log', 'logit', and 'probit'")
+    }else if(is.factor(y) && (nlevels(y) == 2)){
       ylevel <- levels(y)
       y <- as.numeric(y == ylevel[2])
     }else if(is.numeric(y) && all(y %in% c(0, 1))){
@@ -109,18 +124,28 @@ BranchGLM <- function(formula, data, family, link, offset = NULL,
       ylevel <- c(FALSE, TRUE)
       y <- y * 1
     }else{
-      stop("response variable for binomial regression must be a numeric vector with only 
-      0s and 1s, a two-level factor vector, or a logical vector")
-      }
+      stop("response variable for binomial regression must be numeric with only 
+      0s and 1s, a two-level factor, or a logical vector")
+    }
   }else if(family == "poisson"){
-      if(!is.numeric(y) || any(y < 0)){
-        stop("response variable for poisson regression must be a numeric vector of non-negative integers")
-      }else if(any(as.integer(y)!= y)){
-        stop("response variable for poisson regression must be a numeric vector of non-negative integers")
+    if(!(link %in% c("identity", "log", "sqrt"))){
+      stop("valid link functions for poisson regression are 'identity', 'log', and 'sqrt'")
+    }else if(!is.numeric(y) || any(y < 0)){
+      stop("response variable for poisson regression must be a numeric vector of non-negative integers")
+    }else if(any(as.integer(y)!= y)){
+      stop("response variable for poisson regression must be a numeric vector of non-negative integers")
     }
   }else if(family == "gaussian"){
-    if(!is.numeric(y)){
+    if(!(link %in% c("inverse", "identity", "log", "sqrt"))){
+      stop("valid link functions for gaussian regression are 'identity', 'inverse', 'log', and 'sqrt'")
+    }else if(!is.numeric(y)){
       stop("response variable for gaussian regression must be numeric")
+    }
+  }else if(family == "gamma"){
+    if(!(link %in% c("inverse", "identity", "log", "sqrt"))){
+      stop("valid link functions for gamma regression are 'identity', 'inverse', 'log', and 'sqrt'")
+    }else if(!is.numeric(y) || any(y <= 0)){
+      stop("response variable for gamma regression must be positive")
     }
   }
   
@@ -134,14 +159,23 @@ BranchGLM <- function(formula, data, family, link, offset = NULL,
   }else if(!is.numeric(offset)){
     stop("offset must be a numeric vector")
   }
+  if(is.null(init)){
+    init <- rep(0, ncol(x))
+    GetInit <- TRUE
+  }else if(!is.numeric(init) || length(init) != nrow(x)){
+    stop("init must be null or a numeric vector with length equal to the number of betas")
+  }else{
+    GetInit <- FALSE
+  }
   ### Fitting GLM
   if(length(parallel) != 1 || !is.logical(parallel)){
     stop("parallel must be either TRUE or FALSE")
   }else if(parallel){
-    df <- BranchGLMfit(x, y, offset, method, grads, link, family, nthreads, 
-                       tol, maxit) 
+    df <- BranchGLMfit(x, y, offset, init, method, grads, link, family, nthreads, 
+                       tol, maxit, GetInit) 
   }else{
-    df <- BranchGLMfit(x, y, offset, method, grads, link, family, 1, tol, maxit) 
+    df <- BranchGLMfit(x, y, offset, init, method, grads, link, family, 1, tol, maxit, 
+                       GetInit) 
   }
   
   row.names(df$coefficients) <- colnames(x)
@@ -150,12 +184,16 @@ BranchGLM <- function(formula, data, family, link, offset = NULL,
   
   df$method <- method
   
-  df$y <- y
+  if(keepY){
+    df$y <- y
+  }
   
-  df$x <- x
+  df$numobs <- nrow(x)
   
-  df$data <- data
-  
+  if(keepData){
+    df$data <- data
+    df$x <- x
+  }
   df$names <- attributes(terms(formula, data = data))$factors |>
               colnames()
   
@@ -178,6 +216,9 @@ BranchGLM <- function(formula, data, family, link, offset = NULL,
   if(family == "binomial"){
     df$ylevel <- ylevel
   }
+  if(family == "gaussian" && link == "identity"){
+    colnames(df$coefficients)[3] <- "t"
+  }
   structure(df, class = "BranchGLM")
 }
 
@@ -191,7 +232,7 @@ BranchGLM <- function(formula, data, family, link, offset = NULL,
 
 logLik.BranchGLM <- function(object, ...){
   df <- length(coef(object))
-  if(object$family == "gaussian"){
+  if(object$family == "gaussian" || object$family == "gamma"){
     df <- df + 1
   }
   val <- object$logLik
@@ -273,13 +314,13 @@ GetPreds <- function(XBeta, Link){
     exp(-exp(XBeta))
   }
   else if(Link == "inverse"){
-    1 / (XBeta)
+    - 1 / (XBeta)
   }
   else if(Link == "identity"){
     XBeta
   }
   else{
-    sqrt(XBeta)
+    XBeta^2
   }
 }
 
@@ -300,23 +341,26 @@ print.BranchGLM <- function(x, coefdigits = 4, digits = 0, ...){
                has.Pvalue = TRUE)
   
   cat(paste0("\nDispersion parameter taken to be ", round(x$dispersion, coefdigits)))
-  cat(paste0("\n", nrow(x$x), " observations used to fit model\n(", x$missing, 
+  cat(paste0("\n", x$numobs, " observations used to fit model\n(", x$missing, 
              " observations removed due to missingness)\n"))
   cat(paste0("\nResidual Deviance: ", round(x$resDev, digits = digits), " on ",
-             nrow(x$x) - nrow(x$coefficients), " degrees of freedom"))
+             x$numobs - nrow(x$coefficients), " degrees of freedom"))
   cat(paste0("\nAIC: ", round(x$AIC, digits = digits)))
-  
-  if(x$method == "Fisher"){
-    method = "Fisher's scoring"
-  }else if(x$method == "LBFGS"){
-    method = "L-BFGS"
-  }else{method = "BFGS"}
-  if(x$iterations == 1){
-    cat(paste0("\nAlgorithm converged in 1 iteration using ", method, "\n"))
-  }else if(x$iterations > 1){
-    cat(paste0("\nAlgorithm converged in ", x$iterations, " iterations using ", method, "\n"))
+  if(x$family != "gaussian" || x$link != "identity"){
+    if(x$method == "Fisher"){
+      method = "Fisher's scoring"
+    }else if(x$method == "LBFGS"){
+      method = "L-BFGS"
+    }else{method = "BFGS"}
+    if(x$iterations == 1){
+      cat(paste0("\nAlgorithm converged in 1 iteration using ", method, "\n"))
+    }else if(x$iterations > 1){
+      cat(paste0("\nAlgorithm converged in ", x$iterations, " iterations using ", method, "\n"))
+    }else{
+      cat("\nAlgorithm failed to converge\n")
+    }
   }else{
-    cat("\nAlgorithm failed to converge")
+    cat("\n")
   }
   
   if(x$parallel){
