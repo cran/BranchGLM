@@ -1,4 +1,5 @@
 #include <RcppArmadillo.h>
+#include "CrossProducts.h"
 #include <cmath>
 #include <boost/math/special_functions/digamma.hpp>
 #include <boost/math/special_functions/trigamma.hpp>
@@ -71,13 +72,19 @@ arma::vec LinkCpp(const arma::mat* X, arma::vec* beta, const arma::vec* Offset,
     }
   }
   else if(Link == "inverse"){
-    mu = -1 / (XBeta);
+#pragma omp parallel for
+    for(unsigned int i = 0; i < Offset->n_elem; i++){
+      mu.at(i) = -1 / (XBeta.at(i));
+    }
   }
   else if(Link == "identity"){
     mu = XBeta;
   }
   else if(Link == "sqrt"){
-    mu = pow(XBeta, 2);
+#pragma omp parallel for
+    for(unsigned int i = 0; i < Offset->n_elem; i++){
+      mu.at(i) = pow(XBeta.at(i), 2);
+    }
   }
   
   CheckBounds(&mu, Dist);
@@ -170,8 +177,11 @@ double LogLikelihoodCpp(const arma::mat* X, const arma::vec* Y,
       LogLik += -Y->at(i) * log(theta) + log1p(theta);
     }
   }else if(Dist == "gamma"){
-    arma::vec theta = -1 / *mu;
-    LogLik = -arma::dot(*Y, theta) - arma::accu(log(-theta));
+#pragma omp parallel for reduction(+:LogLik)
+    for(unsigned int i = 0; i < Y->n_elem; i++){
+      double theta = -1 / mu->at(i);
+      LogLik += -Y->at(i) * theta - log(-theta);
+    }
   }else{
 #pragma omp parallel for reduction(+:LogLik)
     for(unsigned int i = 0; i < Y->n_elem; i++){
@@ -239,7 +249,6 @@ arma::mat FisherInfoCpp(const arma::mat* X, arma::vec* Deriv,
   w.replace(arma::datum::nan, 0);
   checkUserInterrupt();
   
-  // Calculating fisher information
 #pragma omp parallel for schedule(dynamic, 1)
   for(unsigned int i = 0; i < X->n_cols; i++){
     
@@ -251,7 +260,6 @@ arma::mat FisherInfoCpp(const arma::mat* X, arma::vec* Deriv,
       FinalMat(j, i) = FinalMat(i, j);
       
     } 
-    
   }
   return FinalMat;
 }
@@ -287,7 +295,7 @@ arma::vec LBFGSHelperCpp(arma::vec* g1, arma::mat* s, arma::mat* y,
 int LBFGSGLMCpp(arma::vec* beta, const arma::mat* X, 
                 const arma::vec* Y, const arma::vec* Offset,
                 std::string Link, std::string Dist, 
-                double tol, int maxit, int m = 5, 
+                double tol, int maxit, int m, 
                 double C1 = pow(10, -4)){
   
   // Initializing vectors and matrices 
@@ -340,7 +348,6 @@ int LBFGSGLMCpp(arma::vec* beta, const arma::mat* X,
       mu = LinkCpp(X, beta, Offset, Link, Dist);
       f1 = LogLikelihoodCpp(X, Y, &mu, Dist);
     }
-    
     // Checking for convergence or nan/inf
     if(std::fabs(f1 -  f0) < tol || all(abs(alpha * p) < tol)){
       if(std::isinf(f1) || beta->has_nan()){
@@ -365,7 +372,8 @@ int LBFGSGLMCpp(arma::vec* beta, const arma::mat* X,
 int BFGSGLMCpp(arma::vec* beta, const arma::mat* X, 
                const arma::vec* Y, const arma::vec* Offset,
                std::string Link, std::string Dist,
-               double tol, int maxit, double C1 = pow(10, -4)){
+               double tol, int maxit, 
+               double C1 = pow(10, -4)){
   
   // Initializing vectors and matrices
   arma::vec mu = LinkCpp(X, beta, Offset, Link, Dist);
@@ -446,7 +454,7 @@ int BFGSGLMCpp(arma::vec* beta, const arma::mat* X,
 int FisherScoringGLMCpp(arma::vec* beta, const arma::mat* X, 
                         const arma::vec* Y, const arma::vec* Offset,
                         std::string Link, std::string Dist,
-                        double tol, int maxit,  
+                        double tol, int maxit, 
                         double C1 = pow(10, -4)){
   
   // Initializing vector and matrices
@@ -512,23 +520,13 @@ int FisherScoringGLMCpp(arma::vec* beta, const arma::mat* X,
 }
 
 int LinRegCpp(arma::vec* beta, const arma::mat* x, const arma::mat* y,
-              const arma::vec* offset, arma::vec* SE1){
+              const arma::vec* offset, arma::vec* SE1, unsigned int nthreads){
   
   arma::mat FinalMat(x->n_cols, x->n_cols);
-  // Using this greatly speeds up the process for some reason
-  arma::vec w(y->n_elem, arma::fill::ones);
-  
-  // Finding X'X
-#pragma omp parallel for schedule(dynamic, 1)
-  for(unsigned int i = 0; i < x->n_cols; i++){
-    
-    FinalMat(i, i) = arma::dot(x->col(i) % w, x->col(i));
-    
-    for(unsigned int j = i + 1; j < x->n_cols; j++){
-      
-      FinalMat(i, j) = arma::dot(x->col(j) % w, x->col(i));
-      FinalMat(j, i) = FinalMat(i, j);
-    } 
+  if(nthreads > 1){
+    FinalMat = ParXTX(x);
+  }else{
+    FinalMat = XTX(x, 16);
   }
   
   // calculating inverse of X'X
@@ -545,25 +543,14 @@ int LinRegCpp(arma::vec* beta, const arma::mat* x, const arma::mat* y,
 } 
 
 int LinRegCppShort(arma::vec* beta, const arma::mat* x, const arma::mat* y,
-                   const arma::vec* offset){
+                   const arma::vec* offset, unsigned int nthreads){
   
   arma::mat FinalMat(x->n_cols, x->n_cols);
-  // Using this greatly speeds up the process for some reason
-  arma::vec w(y->n_elem, arma::fill::ones);
-  
-  // Finding X'X
-#pragma omp parallel for schedule(dynamic, 1)
-  for(unsigned int i = 0; i < x->n_cols; i++){
-    
-    FinalMat(i, i) = arma::dot(x->col(i) % w, x->col(i));
-    
-    for(unsigned int j = i + 1; j < x->n_cols; j++){
-      
-      FinalMat(i, j) = arma::dot(x->col(j) % w, x->col(i));
-      FinalMat(j, i) = FinalMat(i, j);
-    } 
+  if(nthreads > 1){
+    FinalMat = ParXTX(x);
+  }else{
+    FinalMat = XTX(x, 16);
   }
-  
   // calculating inverse of X'X
   arma::mat InvXX(x->n_cols, x->n_cols, arma::fill::zeros);
   if(!arma::inv_sympd(InvXX, FinalMat)){
@@ -581,7 +568,7 @@ double GetDispersion(const arma::mat* X, const arma::vec* Y,
                      double tol, double C1 = pow(10, -4)){
   double dispersion = 1;
   if(Dist == "gaussian"){
-    dispersion = arma::accu(pow(*Y - *mu, 2)) / (X->n_rows);
+    dispersion = arma::accu(pow(*Y - *mu, 2)) / (X->n_rows - X->n_cols);
   }else if(Dist == "gamma"){
     unsigned int it = 0;
     double alpha = 1;
@@ -610,22 +597,22 @@ double GetDispersion(const arma::mat* X, const arma::vec* Y,
   return(dispersion);
 }
 
-// Gets initial values for gamma and gaussian regression with log/inverse/sqrt link 
-// and gamma regression with identity link with transformed y linear regression
+// Gets initial values for gamma, poisson, and gaussian regression
 void getInit(arma::vec* beta, const arma::mat* X, const arma::vec* Y, 
-             const arma::vec* Offset, std::string Dist, std::string Link){
+             const arma::vec* Offset, std::string Dist, std::string Link, 
+             unsigned int nthreads){
   
   if(Link == "log" && (Dist == "gamma" || Dist == "gaussian")){
-    const arma::vec NewY = log(*Y);
-    LinRegCppShort(beta, X, &NewY, Offset);
+    arma::vec NewY = log(*Y);
+    LinRegCppShort(beta, X, &NewY, Offset, nthreads);
   }else if(Link == "inverse" && (Dist == "gamma" || Dist == "gaussian")){
     const arma::vec NewY = -1 / (*Y);
-    LinRegCppShort(beta, X, &NewY, Offset);
-  }else if(Link == "sqrt" && (Dist == "gamma" || Dist == "gaussian")){
+    LinRegCppShort(beta, X, &NewY, Offset, nthreads);
+  }else if(Link == "sqrt" && (Dist == "gamma" || Dist == "gaussian"|| Dist == "poisson")){
     const arma::vec NewY = sqrt(*Y);
-    LinRegCppShort(beta, X, &NewY, Offset);
-  }else if(Link == "identity" && (Dist == "gamma")){
-    LinRegCppShort(beta, X, Y, Offset);
+    LinRegCppShort(beta, X, &NewY, Offset, nthreads);
+  }else if(Link == "identity" && (Dist == "gamma" || Dist == "poisson")){
+    LinRegCppShort(beta, X, Y, Offset, nthreads);
   }
 }
 
@@ -654,12 +641,12 @@ List BranchGLMfit(NumericMatrix x, NumericVector y, NumericVector offset,
   
   // Getting initial values
   if(GetInit){
-    getInit(&beta, &X, &Y, &Offset, Dist, Link);
+    getInit(&beta, &X, &Y, &Offset, Dist, Link, nthreads);
   }
   
   // Fitting model
   if(Dist == "gaussian" && Link == "identity"){
-    Iter = LinRegCpp(&beta, &X, &Y, &Offset, &SE1);
+    Iter = LinRegCpp(&beta, &X, &Y, &Offset, &SE1, nthreads);
   }else if(method == "BFGS"){
     Iter = BFGSGLMCpp(&beta, &X, &Y, &Offset, Link, Dist, tol, maxit);
   }
@@ -778,12 +765,12 @@ List BranchGLMFitCpp(const arma::mat* X, const arma::vec* Y, const arma::vec* Of
   double dispersion = 1;
   // Getting initial values
   if(GetInit){
-    getInit(&beta, X, Y, Offset, Dist, Link);
+    getInit(&beta, X, Y, Offset, Dist, Link, nthreads);
   }
   
   // Fitting model
   if(Dist == "gaussian" && Link == "identity"){
-    Iter = LinRegCpp(&beta, X, Y, Offset, &SE1);
+    Iter = LinRegCpp(&beta, X, Y, Offset, &SE1, nthreads);
   }else if(method == "BFGS"){
     Iter = BFGSGLMCpp(&beta, X, Y, Offset, Link, Dist, tol, maxit);
   }
