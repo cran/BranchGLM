@@ -1,9 +1,9 @@
-11998fc7bbd0350e1e79be24eb2a3e15 *DESCRIPTION
+f411d148dbaca8e981fadebd02e94b5f *DESCRIPTION
 0bcf7ef85570436dade424fd4efd5a80 *NAMESPACE
 c1f4f8f2d0cb77e836c43f813ecb8469 *R/BranchGLM.R
 45f49754f2d7ebb488c2e6a0c8894baa *R/BranchGLMTable.R
 5d2015db89628e5d6990be0c1b339966 *R/RcppExports.R
-ca657deeee42a363a50b80c6e6fa9dc9 *R/VariableSelection.R
+984138d4f6281612b6179d6a34d18f08 *R/VariableSelection.R
 122a64c5c17b83be7f6d6301c2dfec57 *build/vignette.rds
 3e850c1cddbd10205f7b52b2afa1a077 *inst/doc/BranchGLM-Vignette.R
 c2f03f77b85934191c6935257f1a2613 *inst/doc/BranchGLM-Vignette.Rmd
