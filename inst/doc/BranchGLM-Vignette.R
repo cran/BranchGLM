@@ -6,6 +6,11 @@ knitr::opts_chunk$set(
 
 ## ---- eval = FALSE------------------------------------------------------------
 #  
+#  install.packages("BranchGLM")
+#  
+
+## ---- eval = FALSE------------------------------------------------------------
+#  
 #  devtools::install_github("JacobSeedorff21/BranchGLM")
 #  
 
