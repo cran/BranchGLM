@@ -335,47 +335,39 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <div id="TOC">
 <ul>
-<li><a href="#description"><span class="toc-section-number">1</span>
-Description</a></li>
-<li><a href="#installation"><span class="toc-section-number">2</span>
-Installation</a></li>
-<li><a href="#fitting-glms"><span class="toc-section-number">3</span>
-Fitting GLMs</a>
+<li><a href="#description" id="toc-description"><span class="toc-section-number">1</span> Description</a></li>
+<li><a href="#installation" id="toc-installation"><span class="toc-section-number">2</span> Installation</a></li>
+<li><a href="#fitting-glms" id="toc-fitting-glms"><span class="toc-section-number">3</span> Fitting GLMs</a>
 <ul>
-<li><a href="#optimization-methods"><span class="toc-section-number">3.1</span> Optimization methods</a></li>
-<li><a href="#examples"><span class="toc-section-number">3.2</span>
-Examples</a></li>
-<li><a href="#useful-functions"><span class="toc-section-number">3.3</span> Useful functions</a></li>
+<li><a href="#optimization-methods" id="toc-optimization-methods"><span class="toc-section-number">3.1</span> Optimization methods</a></li>
+<li><a href="#examples" id="toc-examples"><span class="toc-section-number">3.2</span> Examples</a></li>
+<li><a href="#useful-functions" id="toc-useful-functions"><span class="toc-section-number">3.3</span> Useful functions</a></li>
 </ul></li>
-<li><a href="#performing-variable-selection"><span class="toc-section-number">4</span> Performing variable selection</a>
+<li><a href="#performing-variable-selection" id="toc-performing-variable-selection"><span class="toc-section-number">4</span> Performing variable selection</a>
 <ul>
-<li><a href="#stepwise-methods"><span class="toc-section-number">4.1</span> Stepwise methods</a>
+<li><a href="#stepwise-methods" id="toc-stepwise-methods"><span class="toc-section-number">4.1</span> Stepwise methods</a>
 <ul>
-<li><a href="#forward-selection-example"><span class="toc-section-number">4.1.1</span> Forward selection
+<li><a href="#forward-selection-example" id="toc-forward-selection-example"><span class="toc-section-number">4.1.1</span> Forward selection
 example</a></li>
-<li><a href="#backward-elimination-example"><span class="toc-section-number">4.1.2</span> Backward elimination
+<li><a href="#backward-elimination-example" id="toc-backward-elimination-example"><span class="toc-section-number">4.1.2</span> Backward elimination
 example</a></li>
 </ul></li>
-<li><a href="#branch-and-bound"><span class="toc-section-number">4.2</span> Branch and bound</a>
+<li><a href="#branch-and-bound" id="toc-branch-and-bound"><span class="toc-section-number">4.2</span> Branch and bound</a>
 <ul>
-<li><a href="#branch-and-bound-example"><span class="toc-section-number">4.2.1</span> Branch and bound
+<li><a href="#branch-and-bound-example" id="toc-branch-and-bound-example"><span class="toc-section-number">4.2.1</span> Branch and bound
 example</a></li>
 </ul></li>
-<li><a href="#using-keep"><span class="toc-section-number">4.3</span>
-Using keep</a></li>
-<li><a href="#convergence-issues"><span class="toc-section-number">4.4</span> Convergence issues</a></li>
+<li><a href="#using-keep" id="toc-using-keep"><span class="toc-section-number">4.3</span> Using keep</a></li>
+<li><a href="#convergence-issues" id="toc-convergence-issues"><span class="toc-section-number">4.4</span> Convergence issues</a></li>
 </ul></li>
-<li><a href="#utility-functions-for-binomial-glms"><span class="toc-section-number">5</span> Utility functions for binomial
+<li><a href="#utility-functions-for-binomial-glms" id="toc-utility-functions-for-binomial-glms"><span class="toc-section-number">5</span> Utility functions for binomial
 GLMs</a>
 <ul>
-<li><a href="#table"><span class="toc-section-number">5.1</span>
-Table</a></li>
-<li><a href="#roc"><span class="toc-section-number">5.2</span>
-ROC</a></li>
-<li><a href="#cindexauc"><span class="toc-section-number">5.3</span>
-Cindex/AUC</a></li>
-<li><a href="#multiplerocplots"><span class="toc-section-number">5.4</span> MultipleROCPlots</a></li>
-<li><a href="#using-predictions"><span class="toc-section-number">5.5</span> Using predictions</a></li>
+<li><a href="#table" id="toc-table"><span class="toc-section-number">5.1</span> Table</a></li>
+<li><a href="#roc" id="toc-roc"><span class="toc-section-number">5.2</span> ROC</a></li>
+<li><a href="#cindexauc" id="toc-cindexauc"><span class="toc-section-number">5.3</span> Cindex/AUC</a></li>
+<li><a href="#multiplerocplots" id="toc-multiplerocplots"><span class="toc-section-number">5.4</span> MultipleROCPlots</a></li>
+<li><a href="#using-predictions" id="toc-using-predictions"><span class="toc-section-number">5.5</span> Using predictions</a></li>
 </ul></li>
 </ul>
 </div>
@@ -424,8 +416,8 @@ number of gradients that are stored at a time and are used to
 approximate the inverse information. The default value for this is 10,
 but another common choice is 5.</li>
 <li>The <code>tol</code> argument controls how strict the convergence
-criteria are, higher tolerance will lead to more accurate results, but
-may also be slower.</li>
+criteria are, lower values of this will lead to more accurate results,
+but may also be slower.</li>
 <li>The <code>method</code> argument is ignored for linear regression
 and the OLS solution is used.</li>
 </ul>
@@ -482,17 +474,17 @@ numeric vector.</li>
 <span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Using the formula mpg ~ .</span></span>
 <span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;               Estimate         SE       t p.values  </span></span>
-<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; (Intercept) -6.793e-02  3.086e-02 -2.2010  0.03904 *</span></span>
-<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; cyl          1.761e-03  1.946e-03  0.9049  0.37580  </span></span>
-<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; disp        -7.993e-06  3.516e-05 -0.2273  0.82240  </span></span>
-<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; hp          -6.720e-05  4.051e-05 -1.6590  0.11200  </span></span>
-<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; drat        -4.270e-04  2.728e-03 -0.1565  0.87710  </span></span>
-<span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; wt          -9.225e-03  3.361e-03 -2.7440  0.01215 *</span></span>
-<span id="cb3-53"><a href="#cb3-53" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; qsec         1.739e-03  1.166e-03  1.4920  0.15060  </span></span>
-<span id="cb3-54"><a href="#cb3-54" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; vs          -3.102e-04  3.323e-03 -0.0933  0.92650  </span></span>
-<span id="cb3-55"><a href="#cb3-55" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; am           6.274e-04  3.442e-03  0.1823  0.85710  </span></span>
-<span id="cb3-56"><a href="#cb3-56" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; gear         4.881e-03  2.578e-03  1.8940  0.07214 .</span></span>
-<span id="cb3-57"><a href="#cb3-57" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; carb        -1.026e-03  1.481e-03 -0.6930  0.49590  </span></span>
+<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; (Intercept) -6.794e-02  3.085e-02 -2.2020  0.03898 *</span></span>
+<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; cyl          1.760e-03  1.946e-03  0.9047  0.37590  </span></span>
+<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; disp        -7.947e-06  3.515e-05 -0.2261  0.82330  </span></span>
+<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; hp          -6.724e-05  4.050e-05 -1.6600  0.11170  </span></span>
+<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; drat        -4.283e-04  2.728e-03 -0.1570  0.87670  </span></span>
+<span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; wt          -9.224e-03  3.360e-03 -2.7450  0.01214 *</span></span>
+<span id="cb3-53"><a href="#cb3-53" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; qsec         1.739e-03  1.165e-03  1.4930  0.15040  </span></span>
+<span id="cb3-54"><a href="#cb3-54" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; vs          -3.087e-04  3.322e-03 -0.0929  0.92690  </span></span>
+<span id="cb3-55"><a href="#cb3-55" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; am           6.304e-04  3.441e-03  0.1832  0.85640  </span></span>
+<span id="cb3-56"><a href="#cb3-56" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; gear         4.882e-03  2.577e-03  1.8940  0.07204 .</span></span>
+<span id="cb3-57"><a href="#cb3-57" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; carb        -1.025e-03  1.481e-03 -0.6926  0.49610  </span></span>
 <span id="cb3-58"><a href="#cb3-58" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ---</span></span>
 <span id="cb3-59"><a href="#cb3-59" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span></span>
 <span id="cb3-60"><a href="#cb3-60" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
@@ -502,7 +494,7 @@ numeric vector.</li>
 <span id="cb3-64"><a href="#cb3-64" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb3-65"><a href="#cb3-65" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Residual Deviance: 0 on 21 degrees of freedom</span></span>
 <span id="cb3-66"><a href="#cb3-66" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; AIC: 152</span></span>
-<span id="cb3-67"><a href="#cb3-67" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Algorithm converged in 2 iterations using L-BFGS</span></span></code></pre></div>
+<span id="cb3-67"><a href="#cb3-67" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Algorithm converged in 3 iterations using L-BFGS</span></span></code></pre></div>
 </div>
 <div id="useful-functions" class="section level2" number="3.3">
 <h2><span class="header-section-number">3.3</span> Useful functions</h2>
@@ -526,26 +518,26 @@ is included in the <code>BranchGLM</code> object.</li>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="do">### Predict method</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(GammaFit)</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [1] 21.18615 20.58497 25.08262 19.73161 16.84319 19.66668 14.40835 22.08084</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [9] 23.72765 18.71060 19.08313 15.34283 16.20932 16.27113 12.61543 12.23133</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [17] 12.09623 28.31611 31.25422 32.12053 22.43103 17.18572 17.63337 13.73915</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [25] 15.78662 29.52933 26.61283 30.53478 16.86586 19.39727 14.08581 21.53070</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [1] 21.18646 20.58540 25.08262 19.73260 16.84361 19.66750 14.40825 22.08188</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [9] 23.72831 18.71060 19.08321 15.34256 16.20899 16.27084 12.61678 12.23244</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [17] 12.09701 28.31601 31.25370 32.11988 22.42958 17.18607 17.63342 13.73885</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [25] 15.78752 29.52892 26.61243 30.53420 16.86624 19.39720 14.08588 21.53099</span></span>
 <span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="do">### Accessing coefficients matrix</span></span>
 <span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>GammaFit<span class="sc">$</span>coefficients</span>
 <span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                  Estimate           SE           t   p.values</span></span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; (Intercept) -6.792915e-02 3.086005e-02 -2.20120066 0.03904350</span></span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; cyl          1.760788e-03 1.945904e-03  0.90486903 0.37579939</span></span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; disp        -7.992537e-06 3.515842e-05 -0.22732922 0.82236631</span></span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; hp          -6.719661e-05 4.050560e-05 -1.65894623 0.11198891</span></span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; drat        -4.270142e-04 2.728102e-03 -0.15652428 0.87711480</span></span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; wt          -9.224571e-03 3.361171e-03 -2.74445162 0.01214821</span></span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; qsec         1.738884e-03 1.165572e-03  1.49187199 0.15060345</span></span>
-<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; vs          -3.101872e-04 3.323047e-03 -0.09334419 0.92651497</span></span>
-<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; am           6.273623e-04 3.441894e-03  0.18227243 0.85711700</span></span>
-<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; gear         4.880930e-03 2.577605e-03  1.89359104 0.07213952</span></span>
-<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; carb        -1.026295e-03 1.480877e-03 -0.69303204 0.49588331</span></span></code></pre></div>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; (Intercept) -6.794026e-02 3.085396e-02 -2.20199519 0.03897971</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; cyl          1.760179e-03 1.945517e-03  0.90473592 0.37586830</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; disp        -7.947123e-06 3.515071e-05 -0.22608709 0.82331968</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; hp          -6.724158e-05 4.049734e-05 -1.66039498 0.11169449</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; drat        -4.282730e-04 2.727545e-03 -0.15701775 0.87673070</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; wt          -9.224050e-03 3.360483e-03 -2.74485832 0.01213720</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; qsec         1.739266e-03 1.165327e-03  1.49251309 0.15043663</span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; vs          -3.086809e-04 3.322383e-03 -0.09290948 0.92685616</span></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; am           6.304156e-04 3.441185e-03  0.18319724 0.85640047</span></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; gear         4.881920e-03 2.577117e-03  1.89433406 0.07203615</span></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; carb        -1.025451e-03 1.480570e-03 -0.69260584 0.49614538</span></span></code></pre></div>
 </div>
 </div>
 <div id="performing-variable-selection" class="section level1" number="4">
@@ -603,9 +595,9 @@ example</h3>
 <span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Using the formula mpg ~ hp + wt</span></span>
 <span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;               Estimate         SE      t  p.values    </span></span>
-<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; (Intercept) -8.923e-03  2.806e-03 -3.180 0.0034920 ** </span></span>
-<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; hp          -8.887e-05  2.110e-05 -4.212 0.0002246 ***</span></span>
-<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; wt          -9.826e-03  1.384e-03 -7.100 8.217e-08 ***</span></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; (Intercept) -8.923e-03  2.806e-03 -3.180 0.0034910 ** </span></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; hp          -8.887e-05  2.110e-05 -4.212 0.0002245 ***</span></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; wt          -9.826e-03  1.384e-03 -7.100  8.21e-08 ***</span></span>
 <span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ---</span></span>
 <span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span></span>
 <span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
@@ -615,7 +607,7 @@ example</h3>
 <span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Residual Deviance: 0 on 29 degrees of freedom</span></span>
 <span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; AIC: 142</span></span>
-<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Algorithm converged in 2 iterations using Fisher&#39;s scoring</span></span></code></pre></div>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Algorithm converged in 3 iterations using Fisher&#39;s scoring</span></span></code></pre></div>
 </div>
 <div id="backward-elimination-example" class="section level3" number="4.1.2">
 <h3><span class="header-section-number">4.1.2</span> Backward
@@ -644,11 +636,11 @@ elimination example</h3>
 <span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Using the formula mpg ~ hp + wt + qsec + gear</span></span>
 <span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;               Estimate         SE      t  p.values    </span></span>
-<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; (Intercept) -4.691e-02  1.782e-02 -2.632   0.01385 *  </span></span>
-<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; hp          -6.284e-05  3.016e-05 -2.084   0.04677 *  </span></span>
-<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; wt          -9.485e-03  1.820e-03 -5.212 1.722e-05 ***</span></span>
-<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; qsec         1.299e-03  7.472e-04  1.738   0.09352 .  </span></span>
-<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; gear         2.662e-03  1.652e-03  1.611   0.11870    </span></span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; (Intercept) -4.691e-02  1.782e-02 -2.633   0.01384 *  </span></span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; hp          -6.284e-05  3.015e-05 -2.084   0.04675 *  </span></span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; wt          -9.485e-03  1.819e-03 -5.213 1.719e-05 ***</span></span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; qsec         1.299e-03  7.471e-04  1.739   0.09348 .  </span></span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; gear         2.662e-03  1.652e-03  1.612   0.11870    </span></span>
 <span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ---</span></span>
 <span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span></span>
 <span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
@@ -658,15 +650,15 @@ elimination example</h3>
 <span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb6-37"><a href="#cb6-37" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Residual Deviance: 0 on 27 degrees of freedom</span></span>
 <span id="cb6-38"><a href="#cb6-38" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; AIC: 142</span></span>
-<span id="cb6-39"><a href="#cb6-39" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Algorithm converged in 2 iterations using Fisher&#39;s scoring</span></span></code></pre></div>
+<span id="cb6-39"><a href="#cb6-39" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Algorithm converged in 3 iterations using Fisher&#39;s scoring</span></span></code></pre></div>
 </div>
 </div>
 <div id="branch-and-bound" class="section level2" number="4.2">
 <h2><span class="header-section-number">4.2</span> Branch and bound</h2>
 <ul>
-<li>Branch and bound is much slower than the other methods, but it is
-guaranteed to find the best model.</li>
-<li>The branch and bound method can be much faster than an exhaustive
+<li>The Branch and bound methods can be much slower than the stepwise
+methods, but they are guaranteed to find the best model.</li>
+<li>The branch and bound methods can be much faster than an exhaustive
 search and can also be made many times faster if parallel computation is
 used.</li>
 <li>One way to judge how much faster the branch and bound algorithm is
@@ -684,7 +676,7 @@ example</h3>
 <ul>
 <li>If <code>showprogress</code> is true, then progress of the branch
 and bound algorithm will be reported occasionally.</li>
-<li>Parallel computation can be used with this method and can lead to
+<li>Parallel computation can be used with these methods and can lead to
 very large speedups.</li>
 </ul>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="do">### Branch and bound with mtcars</span></span>
@@ -694,7 +686,7 @@ very large speedups.</li>
 <span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; --------------------------------------------</span></span>
 <span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Variables were selected using branch and bound selection with AIC</span></span>
 <span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; The best value of AIC obtained was 142</span></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Number of models fit: 112</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Number of models fit: 74</span></span>
 <span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; --------------------------------------------</span></span>
@@ -704,11 +696,11 @@ very large speedups.</li>
 <span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Using the formula mpg ~ hp + wt + qsec + gear</span></span>
 <span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;               Estimate         SE      t  p.values    </span></span>
-<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; (Intercept) -4.691e-02  1.782e-02 -2.632   0.01385 *  </span></span>
-<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; hp          -6.284e-05  3.016e-05 -2.084   0.04677 *  </span></span>
-<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; wt          -9.485e-03  1.820e-03 -5.212 1.722e-05 ***</span></span>
-<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; qsec         1.299e-03  7.472e-04  1.738   0.09352 .  </span></span>
-<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; gear         2.662e-03  1.652e-03  1.611   0.11870    </span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; (Intercept) -4.691e-02  1.782e-02 -2.633   0.01384 *  </span></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; hp          -6.284e-05  3.015e-05 -2.084   0.04675 *  </span></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; wt          -9.485e-03  1.819e-03 -5.213 1.719e-05 ***</span></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; qsec         1.299e-03  7.471e-04  1.739   0.09348 .  </span></span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; gear         2.662e-03  1.652e-03  1.612   0.11870    </span></span>
 <span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ---</span></span>
 <span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span></span>
 <span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
@@ -718,7 +710,7 @@ very large speedups.</li>
 <span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Residual Deviance: 0 on 27 degrees of freedom</span></span>
 <span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; AIC: 142</span></span>
-<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Algorithm converged in 2 iterations using Fisher&#39;s scoring</span></span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Algorithm converged in 3 iterations using Fisher&#39;s scoring</span></span>
 <span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a><span class="do">### Can also use a formula and data</span></span>
 <span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a></span>
@@ -729,7 +721,7 @@ very large speedups.</li>
 <span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a><span class="do">### Number of models fit divided by the number of possible models</span></span>
 <span id="cb7-41"><a href="#cb7-41" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-42"><a href="#cb7-42" aria-hidden="true" tabindex="-1"></a>FormulaVS<span class="sc">$</span>numchecked <span class="sc">/</span> <span class="dv">2</span><span class="sc">^</span>(<span class="fu">length</span>(FormulaVS<span class="sc">$</span>variables))</span>
-<span id="cb7-43"><a href="#cb7-43" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.109375</span></span>
+<span id="cb7-43"><a href="#cb7-43" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.07226562</span></span>
 <span id="cb7-44"><a href="#cb7-44" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-45"><a href="#cb7-45" aria-hidden="true" tabindex="-1"></a><span class="do">### Extracting final model</span></span>
 <span id="cb7-46"><a href="#cb7-46" aria-hidden="true" tabindex="-1"></a></span>
@@ -738,11 +730,11 @@ very large speedups.</li>
 <span id="cb7-49"><a href="#cb7-49" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Using the formula mpg ~ hp + wt + qsec + gear</span></span>
 <span id="cb7-50"><a href="#cb7-50" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb7-51"><a href="#cb7-51" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;               Estimate         SE      t  p.values    </span></span>
-<span id="cb7-52"><a href="#cb7-52" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; (Intercept) -4.691e-02  1.782e-02 -2.632   0.01385 *  </span></span>
-<span id="cb7-53"><a href="#cb7-53" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; hp          -6.284e-05  3.016e-05 -2.084   0.04677 *  </span></span>
-<span id="cb7-54"><a href="#cb7-54" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; wt          -9.485e-03  1.820e-03 -5.212 1.722e-05 ***</span></span>
-<span id="cb7-55"><a href="#cb7-55" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; qsec         1.299e-03  7.472e-04  1.738   0.09352 .  </span></span>
-<span id="cb7-56"><a href="#cb7-56" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; gear         2.662e-03  1.652e-03  1.611   0.11870    </span></span>
+<span id="cb7-52"><a href="#cb7-52" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; (Intercept) -4.691e-02  1.782e-02 -2.633   0.01384 *  </span></span>
+<span id="cb7-53"><a href="#cb7-53" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; hp          -6.284e-05  3.015e-05 -2.084   0.04675 *  </span></span>
+<span id="cb7-54"><a href="#cb7-54" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; wt          -9.485e-03  1.819e-03 -5.213 1.719e-05 ***</span></span>
+<span id="cb7-55"><a href="#cb7-55" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; qsec         1.299e-03  7.471e-04  1.739   0.09348 .  </span></span>
+<span id="cb7-56"><a href="#cb7-56" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; gear         2.662e-03  1.652e-03  1.612   0.11870    </span></span>
 <span id="cb7-57"><a href="#cb7-57" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ---</span></span>
 <span id="cb7-58"><a href="#cb7-58" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span></span>
 <span id="cb7-59"><a href="#cb7-59" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
@@ -752,7 +744,7 @@ very large speedups.</li>
 <span id="cb7-63"><a href="#cb7-63" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb7-64"><a href="#cb7-64" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Residual Deviance: 0 on 27 degrees of freedom</span></span>
 <span id="cb7-65"><a href="#cb7-65" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; AIC: 142</span></span>
-<span id="cb7-66"><a href="#cb7-66" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Algorithm converged in 2 iterations using Fisher&#39;s scoring</span></span></code></pre></div>
+<span id="cb7-66"><a href="#cb7-66" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Algorithm converged in 3 iterations using Fisher&#39;s scoring</span></span></code></pre></div>
 </div>
 </div>
 <div id="using-keep" class="section level2" number="4.3">
@@ -771,7 +763,7 @@ variables are kept through the selection process.</li>
 <span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; --------------------------------------------</span></span>
 <span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Variables were selected using branch and bound selection with AIC</span></span>
 <span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; The best value of AIC obtained was 143</span></span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Number of models fit: 49</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Number of models fit: 38</span></span>
 <span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Variables that were kept in each model:  hp, cyl</span></span>
 <span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; --------------------------------------------</span></span>
@@ -781,12 +773,12 @@ variables are kept through the selection process.</li>
 <span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Using the formula mpg ~ cyl + hp + wt + qsec + gear</span></span>
 <span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;               Estimate         SE       t  p.values    </span></span>
-<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; (Intercept) -6.464e-02  2.701e-02 -2.3930   0.02420 *  </span></span>
-<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; cyl          1.412e-03  1.642e-03  0.8601   0.39760    </span></span>
-<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; hp          -7.523e-05  3.321e-05 -2.2650   0.03208 *  </span></span>
-<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; wt          -1.037e-02  2.082e-03 -4.9820 3.524e-05 ***</span></span>
-<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; qsec         1.816e-03  9.463e-04  1.9190   0.06607 .  </span></span>
-<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; gear         3.861e-03  2.156e-03  1.7910   0.08495 .  </span></span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; (Intercept) -6.464e-02  2.700e-02 -2.3940   0.02418 *  </span></span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; cyl          1.412e-03  1.642e-03  0.8603   0.39750    </span></span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; hp          -7.523e-05  3.321e-05 -2.2650   0.03205 *  </span></span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; wt          -1.037e-02  2.082e-03 -4.9830 3.517e-05 ***</span></span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; qsec         1.816e-03  9.462e-04  1.9190   0.06603 .  </span></span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; gear         3.861e-03  2.155e-03  1.7910   0.08490 .  </span></span>
 <span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ---</span></span>
 <span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span></span>
 <span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
@@ -796,7 +788,7 @@ variables are kept through the selection process.</li>
 <span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Residual Deviance: 0 on 26 degrees of freedom</span></span>
 <span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; AIC: 143</span></span>
-<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Algorithm converged in 2 iterations using Fisher&#39;s scoring</span></span></code></pre></div>
+<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Algorithm converged in 3 iterations using Fisher&#39;s scoring</span></span></code></pre></div>
 </div>
 <div id="convergence-issues" class="section level2" number="4.4">
 <h2><span class="header-section-number">4.4</span> Convergence
