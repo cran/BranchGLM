@@ -1,122 +1,77 @@
-## ---- include = FALSE---------------------------------------------------------
+## ----setup, include = FALSE---------------------------------------------------
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
 
-## ---- eval = FALSE------------------------------------------------------------
-#  
-#  install.packages("BranchGLM")
-#  
-
-## ---- eval = FALSE------------------------------------------------------------
-#  
-#  devtools::install_github("JacobSeedorff21/BranchGLM")
-#  
-
 ## -----------------------------------------------------------------------------
-### Using mtcars
-
+# Loading in BranchGLM
 library(BranchGLM)
 
+# Fitting gaussian regression models for mtcars dataset
 cars <- mtcars
 
-### Fitting linear regression model with Fisher scoring
+## Identity link
+BranchGLM(mpg ~ ., data = cars, family = "gaussian", link = "identity")
 
-LinearFit <- BranchGLM(mpg ~ ., data = cars, family = "gaussian", link = "identity")
 
-LinearFit
+## -----------------------------------------------------------------------------
+# Fitting gamma regression models for mtcars dataset
+## Inverse link
+GammaFit <- BranchGLM(mpg ~ ., data = cars, family = "gamma", link = "inverse")
+GammaFit
 
-### Fitting gamma regression with inverse link with L-BFGS
-
-GammaFit <- BranchGLM(mpg ~ ., data = cars, family = "gamma", link = "inverse",
-                      method = "LBFGS", grads = 5)
-
+## Log link
+GammaFit <- BranchGLM(mpg ~ ., data = cars, family = "gamma", link = "log")
 GammaFit
 
 
 ## -----------------------------------------------------------------------------
-### Predict method
+# Fitting poisson regression models for warpbreaks dataset
+warp <- warpbreaks
 
-predict(GammaFit)
-
-### Accessing coefficients matrix
-
-GammaFit$coefficients
+## Log link
+BranchGLM(breaks ~ ., data = warp, family = "poisson", link = "log")
 
 
 ## -----------------------------------------------------------------------------
-### Forward selection with mtcars
+# Fitting binomial regression models for toothgrowth dataset
+Data <- ToothGrowth
 
-VariableSelection(GammaFit, type = "forward")
+## Logit link
+BranchGLM(supp ~ ., data = Data, family = "binomial", link = "logit")
 
-
-## -----------------------------------------------------------------------------
-### Backward elimination with mtcars
-
-VariableSelection(GammaFit, type = "backward")
-
-
-## -----------------------------------------------------------------------------
-### Branch and bound with mtcars
-
-VariableSelection(GammaFit, type = "branch and bound", showprogress = FALSE)
-
-### Can also use a formula and data
-
-FormulaVS <- VariableSelection(mpg ~ . ,data = cars, family = "gamma", 
-                               link = "inverse", type = "branch and bound",
-                               showprogress = FALSE)
-
-### Number of models fit divided by the number of possible models
-
-FormulaVS$numchecked / 2^(length(FormulaVS$variables))
-
-### Extracting final model
-
-FormulaVS$finalmodel
+## Probit link
+BranchGLM(supp ~ ., data = Data, family = "binomial", link = "probit")
 
 
 ## -----------------------------------------------------------------------------
-### Example of using keep
-
-VariableSelection(mpg ~ . ,data = cars, family = "gamma", 
-                               link = "inverse", type = "branch and bound",
-                               keep = c("hp", "cyl"), metric = "AIC",
-                               showprogress = FALSE)
-
-
-## -----------------------------------------------------------------------------
-### Predicting if a car gets at least 18 mpg
-
-catData <- ToothGrowth
-
-catFit <- BranchGLM(supp ~ ., data = catData, family = "binomial", link = "logit")
+# Fitting logistic regression model for toothgrowth dataset
+catFit <- BranchGLM(supp ~ ., data = Data, family = "binomial", link = "logit")
 
 Table(catFit)
 
 
 ## -----------------------------------------------------------------------------
-
+# Creating ROC curve
 catROC <- ROC(catFit)
 
 plot(catROC, main = "ROC Curve", col = "indianred")
 
 
 ## -----------------------------------------------------------------------------
-
+# Getting Cindex/AUC
 Cindex(catFit)
 
 AUC(catFit)
 
 
 ## ---- fig.width = 4, fig.height = 4-------------------------------------------
-### Showing ROC plots for logit, probit, and cloglog
-
-probitFit <- BranchGLM(supp ~ . ,data = catData, family = "binomial", 
+# Showing ROC plots for logit, probit, and cloglog
+probitFit <- BranchGLM(supp ~ . ,data = Data, family = "binomial", 
                        link = "probit")
 
-cloglogFit <- BranchGLM(supp ~ . ,data = catData, family = "binomial", 
+cloglogFit <- BranchGLM(supp ~ . ,data = Data, family = "binomial", 
                        link = "cloglog")
 
 MultipleROCCurves(catROC, ROC(probitFit), ROC(cloglogFit), 
@@ -127,10 +82,18 @@ MultipleROCCurves(catROC, ROC(probitFit), ROC(cloglogFit),
 
 preds <- predict(catFit)
 
-Table(preds, catData$supp)
+Table(preds, Data$supp)
 
-AUC(preds, catData$supp)
+AUC(preds, Data$supp)
 
-ROC(preds, catData$supp) |> plot(main = "ROC Curve", col = "deepskyblue")
+ROC(preds, Data$supp) |> plot(main = "ROC Curve", col = "deepskyblue")
+
+
+## -----------------------------------------------------------------------------
+# Predict method
+predict(GammaFit)
+
+# Accessing coefficients matrix
+GammaFit$coefficients
 
 

@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+
+<title>VariableSelection Vignette</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">VariableSelection Vignette</h1>
+
+
+<div id="TOC">
+<ul>
+<li><a href="#performing-variable-selection" id="toc-performing-variable-selection"><span class="toc-section-number">1</span> Performing variable selection</a>
+<ul>
+<li><a href="#metrics" id="toc-metrics"><span class="toc-section-number">1.1</span> Metrics</a></li>
+<li><a href="#stepwise-methods" id="toc-stepwise-methods"><span class="toc-section-number">1.2</span> Stepwise methods</a>
+<ul>
+<li><a href="#forward-selection-example" id="toc-forward-selection-example"><span class="toc-section-number">1.2.1</span> Forward selection
+example</a></li>
+<li><a href="#backward-elimination-example" id="toc-backward-elimination-example"><span class="toc-section-number">1.2.2</span> Backward elimination
+example</a></li>
+</ul></li>
+<li><a href="#branch-and-bound" id="toc-branch-and-bound"><span class="toc-section-number">1.3</span> Branch and bound</a>
+<ul>
+<li><a href="#branch-and-bound-example" id="toc-branch-and-bound-example"><span class="toc-section-number">1.3.1</span> Branch and bound
+example</a></li>
+<li><a href="#using-bestmodels" id="toc-using-bestmodels"><span class="toc-section-number">1.3.2</span> Using bestmodels</a></li>
+<li><a href="#using-cutoff" id="toc-using-cutoff"><span class="toc-section-number">1.3.3</span> Using cutoff</a></li>
+</ul></li>
+<li><a href="#using-keep" id="toc-using-keep"><span class="toc-section-number">1.4</span> Using keep</a></li>
+<li><a href="#convergence-issues" id="toc-convergence-issues"><span class="toc-section-number">1.5</span> Convergence issues</a></li>
+</ul></li>
+</ul>
+</div>
+
+<div id="performing-variable-selection" class="section level1" number="1">
+<h1><span class="header-section-number">1</span> Performing variable
+selection</h1>
+<ul>
+<li>Forward selection, backward elimination, and branch and bound
+selection can be done using <code>VariableSelection()</code>.</li>
+<li><code>VariableSelection()</code> can accept either a
+<code>BranchGLM</code> object or a formula along with the data and the
+desired family and link to perform the variable selection.</li>
+<li>Available metrics are AIC, BIC and HQIC, which are used to compare
+models and to select the best models.</li>
+<li><code>VariableSelection()</code> returns some information about the
+search, more detailed information about the best models can be seen by
+using the <code>summary()</code> function.</li>
+<li>Note that <code>VariableSelection()</code> will properly handle
+interaction terms and categorical variables.</li>
+<li><code>keep</code> can also be specified if any set of variables are
+desired to be kept in every model.</li>
+</ul>
+<div id="metrics" class="section level2" number="1.1">
+<h2><span class="header-section-number">1.1</span> Metrics</h2>
+<ul>
+<li>The 3 different metrics available for comparing models are the
+following
+<ul>
+<li>Akaike information criterion (AIC), which typically results in
+models that are useful for prediction
+<ul>
+<li><span class="math inline">\(AIC = -2logLik + 2 * p\)</span></li>
+</ul></li>
+<li>Bayesian information criterion (BIC), which results in models that
+are more parsimonious than those selected by AIC
+<ul>
+<li><span class="math inline">\(BIC = -2logLik + \log{(n)} *
+p\)</span></li>
+</ul></li>
+<li>Hannan-Quinn information criterion (HQIC), which is in the middle of
+AIC and BIC
+<ul>
+<li><span class="math inline">\(HQIC = -2logLik + 2 * \log({\log{(n)})}
+* p\)</span></li>
+</ul></li>
+</ul></li>
+</ul>
+</div>
+<div id="stepwise-methods" class="section level2" number="1.2">
+<h2><span class="header-section-number">1.2</span> Stepwise methods</h2>
+<ul>
+<li>Forward selection and backward elimination are both stepwise
+variable selection methods.</li>
+<li>They are not guaranteed to find the best model or even a good model,
+but they are very fast.</li>
+<li>Forward selection is recommended if the number of variables is
+greater than the number of observations or if many of the larger models
+don’t converge.</li>
+<li>These methods will only return 1 best model.</li>
+<li>Parallel computation can be used for the methods, but is generally
+only necessary for large datasets.</li>
+</ul>
+<div id="forward-selection-example" class="section level3" number="1.2.1">
+<h3><span class="header-section-number">1.2.1</span> Forward selection
+example</h3>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Loading BranchGLM package</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(BranchGLM)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Fitting gamma regression model</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>cars <span class="ot">&lt;-</span> mtcars</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Fitting gamma regression with inverse link</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>GammaFit <span class="ot">&lt;-</span> <span class="fu">BranchGLM</span>(mpg <span class="sc">~</span> ., <span class="at">data =</span> cars, <span class="at">family =</span> <span class="st">&quot;gamma&quot;</span>, <span class="at">link =</span> <span class="st">&quot;inverse&quot;</span>)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Forward selection with mtcars</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>forwardVS <span class="ot">&lt;-</span> <span class="fu">VariableSelection</span>(GammaFit, <span class="at">type =</span> <span class="st">&quot;forward&quot;</span>)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>forwardVS</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Variable Selection Info:</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ------------------------</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Variables were selected using forward selection with AIC</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; The best value of AIC obtained was 142.2</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Number of models fit: 27</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Order the variables were added to the model:</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1). wt</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2). hp</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="do">## Getting final model</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="fu">fit</span>(<span class="fu">summary</span>(forwardVS), <span class="at">which =</span> <span class="dv">1</span>)</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Results from gamma regression with inverse link function </span></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Using the formula mpg ~ hp + wt</span></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;               Estimate         SE      t  p.values    </span></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; (Intercept) -8.923e-03  2.806e-03 -3.180 0.0034910 ** </span></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; hp          -8.887e-05  2.110e-05 -4.212 0.0002245 ***</span></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; wt          -9.826e-03  1.384e-03 -7.100  8.21e-08 ***</span></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ---</span></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span></span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Dispersion parameter taken to be 0.0104</span></span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 32 observations used to fit model</span></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; (0 observations removed due to missingness)</span></span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Residual Deviance: 0.33 on 29 degrees of freedom</span></span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; AIC: 142.2</span></span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Algorithm converged in 3 iterations using Fisher&#39;s scoring</span></span></code></pre></div>
+</div>
+<div id="backward-elimination-example" class="section level3" number="1.2.2">
+<h3><span class="header-section-number">1.2.2</span> Backward
+elimination example</h3>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Backward elimination with mtcars</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>backwardVS <span class="ot">&lt;-</span> <span class="fu">VariableSelection</span>(GammaFit, <span class="at">type =</span> <span class="st">&quot;backward&quot;</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>backwardVS</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Variable Selection Info:</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ------------------------</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Variables were selected using backward elimination with AIC</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; The best value of AIC obtained was 141.9</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Number of models fit: 49</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Order the variables were removed from the model:</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1). vs</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2). drat</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3). am</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4). disp</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5). carb</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6). cyl</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="do">## Getting final model</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="fu">fit</span>(<span class="fu">summary</span>(backwardVS), <span class="at">which =</span> <span class="dv">1</span>)</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Results from gamma regression with inverse link function </span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Using the formula mpg ~ hp + wt + qsec + gear</span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;               Estimate         SE      t  p.values    </span></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; (Intercept) -4.691e-02  1.782e-02 -2.633   0.01384 *  </span></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; hp          -6.284e-05  3.015e-05 -2.084   0.04675 *  </span></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; wt          -9.485e-03  1.819e-03 -5.213 1.719e-05 ***</span></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; qsec         1.299e-03  7.471e-04  1.739   0.09348 .  </span></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; gear         2.662e-03  1.652e-03  1.612   0.11870    </span></span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ---</span></span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span></span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Dispersion parameter taken to be 0.0091</span></span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 32 observations used to fit model</span></span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; (0 observations removed due to missingness)</span></span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Residual Deviance: 0.29 on 27 degrees of freedom</span></span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; AIC: 141.9</span></span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Algorithm converged in 3 iterations using Fisher&#39;s scoring</span></span></code></pre></div>
+</div>
+</div>
+<div id="branch-and-bound" class="section level2" number="1.3">
+<h2><span class="header-section-number">1.3</span> Branch and bound</h2>
+<ul>
+<li>The branch and bound methods can be much slower than the stepwise
+methods, but they are guaranteed to find the best models.</li>
+<li>The branch and bound methods are typically much faster than an
+exhaustive search and can also be made even faster if parallel
+computation is used.</li>
+</ul>
+<div id="branch-and-bound-example" class="section level3" number="1.3.1">
+<h3><span class="header-section-number">1.3.1</span> Branch and bound
+example</h3>
+<ul>
+<li>If <code>showprogress</code> is true, then progress of the branch
+and bound algorithm will be reported occasionally.</li>
+<li>Parallel computation can be used with these methods and can lead to
+very large speedups.</li>
+</ul>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Branch and bound with mtcars</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>VS <span class="ot">&lt;-</span> <span class="fu">VariableSelection</span>(GammaFit, <span class="at">type =</span> <span class="st">&quot;branch and bound&quot;</span>, <span class="at">showprogress =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>VS</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Variable Selection Info:</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ------------------------</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Variables were selected using branch and bound selection with AIC</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; The best value of AIC obtained was 141.9</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Number of models fit: 56</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="do">## Getting final model</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="fu">fit</span>(<span class="fu">summary</span>(VS), <span class="at">which =</span> <span class="dv">1</span>)</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Results from gamma regression with inverse link function </span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Using the formula mpg ~ hp + wt + qsec + gear</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;               Estimate         SE      t  p.values    </span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; (Intercept) -4.691e-02  1.782e-02 -2.633   0.01384 *  </span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; hp          -6.284e-05  3.015e-05 -2.084   0.04675 *  </span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; wt          -9.485e-03  1.819e-03 -5.213 1.719e-05 ***</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; qsec         1.299e-03  7.471e-04  1.739   0.09348 .  </span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; gear         2.662e-03  1.652e-03  1.612   0.11870    </span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ---</span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Dispersion parameter taken to be 0.0091</span></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 32 observations used to fit model</span></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; (0 observations removed due to missingness)</span></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Residual Deviance: 0.29 on 27 degrees of freedom</span></span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; AIC: 141.9</span></span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Algorithm converged in 3 iterations using Fisher&#39;s scoring</span></span></code></pre></div>
+<ul>
+<li>A formula with the data and the necessary BranchGLM fitting
+information can also be used instead of supplying a
+<code>BranchGLM</code> object.</li>
+</ul>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Can also use a formula and data</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>formulaVS <span class="ot">&lt;-</span> <span class="fu">VariableSelection</span>(mpg <span class="sc">~</span> . ,<span class="at">data =</span> cars, <span class="at">family =</span> <span class="st">&quot;gamma&quot;</span>, </span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>                               <span class="at">link =</span> <span class="st">&quot;inverse&quot;</span>, <span class="at">type =</span> <span class="st">&quot;branch and bound&quot;</span>,</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>                               <span class="at">showprogress =</span> <span class="cn">FALSE</span>, <span class="at">metric =</span> <span class="st">&quot;AIC&quot;</span>)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>formulaVS</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Variable Selection Info:</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ------------------------</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Variables were selected using branch and bound selection with AIC</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; The best value of AIC obtained was 141.9</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Number of models fit: 56</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="do">## Getting final model</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="fu">fit</span>(<span class="fu">summary</span>(formulaVS), <span class="at">which =</span> <span class="dv">1</span>)</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Results from gamma regression with inverse link function </span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Using the formula mpg ~ hp + wt + qsec + gear</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;               Estimate         SE      t  p.values    </span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; (Intercept) -4.691e-02  1.782e-02 -2.633   0.01384 *  </span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; hp          -6.284e-05  3.015e-05 -2.084   0.04675 *  </span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; wt          -9.485e-03  1.819e-03 -5.213 1.719e-05 ***</span></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; qsec         1.299e-03  7.471e-04  1.739   0.09348 .  </span></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; gear         2.662e-03  1.652e-03  1.612   0.11870    </span></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ---</span></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span></span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Dispersion parameter taken to be 0.0091</span></span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 32 observations used to fit model</span></span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; (0 observations removed due to missingness)</span></span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Residual Deviance: 0.29 on 27 degrees of freedom</span></span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; AIC: 141.9</span></span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Algorithm converged in 3 iterations using Fisher&#39;s scoring</span></span></code></pre></div>
+</div>
+<div id="using-bestmodels" class="section level3" number="1.3.2">
+<h3><span class="header-section-number">1.3.2</span> Using
+bestmodels</h3>
+<ul>
+<li>The bestmodels argument can be used to find the top k models
+according to the metric.</li>
+</ul>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Finding top 10 models</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>formulaVS <span class="ot">&lt;-</span> <span class="fu">VariableSelection</span>(mpg <span class="sc">~</span> . ,<span class="at">data =</span> cars, <span class="at">family =</span> <span class="st">&quot;gamma&quot;</span>, </span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>                               <span class="at">link =</span> <span class="st">&quot;inverse&quot;</span>, <span class="at">type =</span> <span class="st">&quot;branch and bound&quot;</span>,</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>                               <span class="at">showprogress =</span> <span class="cn">FALSE</span>, <span class="at">metric =</span> <span class="st">&quot;AIC&quot;</span>, </span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>                               <span class="at">bestmodels =</span> <span class="dv">10</span>)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>formulaVS</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Variable Selection Info:</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ------------------------</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Variables were selected using branch and bound selection with AIC</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Found the top 10 models</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; The range of AIC values for the top 10 models is (141.9, 143.59)</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Number of models fit: 116</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="do">## Getting summary and plotting results</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>formulasumm <span class="ot">&lt;-</span> <span class="fu">summary</span>(formulaVS) </span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(formulasumm, <span class="at">type =</span> <span class="st">&quot;b&quot;</span>)</span></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(formulasumm, <span class="at">ptype =</span> <span class="st">&quot;variables&quot;</span>)</span></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="do">## Getting best model</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">fit</span>(formulasumm, <span class="at">which =</span> <span class="dv">1</span>)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Results from gamma regression with inverse link function </span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Using the formula mpg ~ hp + wt + qsec + gear</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;               Estimate         SE      t  p.values    </span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; (Intercept) -4.691e-02  1.782e-02 -2.633   0.01384 *  </span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; hp          -6.284e-05  3.015e-05 -2.084   0.04675 *  </span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; wt          -9.485e-03  1.819e-03 -5.213 1.719e-05 ***</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; qsec         1.299e-03  7.471e-04  1.739   0.09348 .  </span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; gear         2.662e-03  1.652e-03  1.612   0.11870    </span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ---</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Dispersion parameter taken to be 0.0091</span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 32 observations used to fit model</span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; (0 observations removed due to missingness)</span></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Residual Deviance: 0.29 on 27 degrees of freedom</span></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; AIC: 141.9</span></span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Algorithm converged in 3 iterations using Fisher&#39;s scoring</span></span></code></pre></div>
+</div>
+<div id="using-cutoff" class="section level3" number="1.3.3">
+<h3><span class="header-section-number">1.3.3</span> Using cutoff</h3>
+<ul>
+<li>The cutoff argument can be used to find all models that have a
+metric value that is within cutoff of the minimum metric value
+found.</li>
+</ul>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Finding all models with a AIC within 2 of the best model</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>formulaVS <span class="ot">&lt;-</span> <span class="fu">VariableSelection</span>(mpg <span class="sc">~</span> . ,<span class="at">data =</span> cars, <span class="at">family =</span> <span class="st">&quot;gamma&quot;</span>, </span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>                               <span class="at">link =</span> <span class="st">&quot;inverse&quot;</span>, <span class="at">type =</span> <span class="st">&quot;branch and bound&quot;</span>,</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>                               <span class="at">showprogress =</span> <span class="cn">FALSE</span>, <span class="at">metric =</span> <span class="st">&quot;AIC&quot;</span>, </span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>                               <span class="at">cutoff =</span> <span class="dv">2</span>)</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>formulaVS</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Variable Selection Info:</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ------------------------</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Variables were selected using branch and bound selection with AIC</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Found the top 16 models</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; The range of AIC values for the top 16 models is (141.9, 143.9)</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Number of models fit: 110</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="do">## Getting summary and plotting results</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>formulasumm <span class="ot">&lt;-</span> <span class="fu">summary</span>(formulaVS) </span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(formulasumm, <span class="at">type =</span> <span class="st">&quot;b&quot;</span>)</span></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(formulasumm, <span class="at">ptype =</span> <span class="st">&quot;variables&quot;</span>)</span></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+</div>
+</div>
+<div id="using-keep" class="section level2" number="1.4">
+<h2><span class="header-section-number">1.4</span> Using keep</h2>
+<ul>
+<li>Specifying variables via <code>keep</code> will ensure that those
+variables are kept through the selection process.</li>
+</ul>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Example of using keep</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>keepVS <span class="ot">&lt;-</span> <span class="fu">VariableSelection</span>(mpg <span class="sc">~</span> . ,<span class="at">data =</span> cars, <span class="at">family =</span> <span class="st">&quot;gamma&quot;</span>, </span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>                               <span class="at">link =</span> <span class="st">&quot;inverse&quot;</span>, <span class="at">type =</span> <span class="st">&quot;branch and bound&quot;</span>,</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>                               <span class="at">keep =</span> <span class="fu">c</span>(<span class="st">&quot;hp&quot;</span>, <span class="st">&quot;cyl&quot;</span>), <span class="at">metric =</span> <span class="st">&quot;AIC&quot;</span>,</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>                               <span class="at">showprogress =</span> <span class="cn">FALSE</span>, <span class="at">bestmodels =</span> <span class="dv">10</span>)</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>keepVS</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Variable Selection Info:</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ------------------------</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Variables were selected using branch and bound selection with AIC</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Found the top 10 models</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; The range of AIC values for the top 10 models is (143.17, 145.24)</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Number of models fit: 50</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a><span class="do">## Getting summary and plotting results</span></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>keepsumm <span class="ot">&lt;-</span> <span class="fu">summary</span>(keepVS) </span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(keepsumm, <span class="at">type =</span> <span class="st">&quot;b&quot;</span>)</span></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(keepsumm, <span class="at">ptype =</span> <span class="st">&quot;variables&quot;</span>)</span></code></pre></div>
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAkAAAAGACAMAAAByRC0tAAAA6lBMVEUAAAAAADoAAGYAOjoAOmYAOpAAZpAAZrYAv/8iiyI6AAA6ADo6AGY6OgA6Ojo6OmY6ZmY6ZpA6ZrY6kLY6kNtmAABmADpmAGZmOgBmOjpmZgBmZjpmZmZmkJBmkLZmkNtmtrZmtttmtv+QOgCQOjqQOmaQZgCQZjqQkDqQkGaQkLaQkNuQtpCQttuQtv+Q29uQ2/+2ZgC2Zjq2Zma2ZpC2kDq2kGa227a229u22/+2/7a2/9u2///NXFzbkDrbkGbbkJDbtmbbtpDb25Db27bb2//b/9vb////tmb/25D/27b//7b//9v///93vojRAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAWi0lEQVR4nO2dC5vjtBWGM8tO086y0MIE6B0mBUpbSgyl7bZTt0sp42yS//93qpttOZGOZZ3Ylu3vfR7YTBRLnugdXY5leXUCgMFq7BMA0wYCARYQCLCAQIAFBAIsIBBgAYEACwgEWEAgwAICARYQCLCAQIAFBAIsIBBgAYEACwgEWEAgwAICARYQCLCAQIAFBAIsIBBgAYEAiyQEyleam5+98n/o+JdH8yoTH719Kl+tnZ/OVs8erR+PW3PEqfmmLvZdotizjHyJ5MdOp2Jl0ssTOb5+KUqmCp4ISQm0ImrhzUfPbIFuduLFYXMVgUxubq4jkDzlB+tEDh+Zku+JgyZBYgL5v1CrhrLyg/u7KwnkycSRkS+RFqg2XZ+IVfKD/6hJkIhA+tsXQshv+fi1aBPeU/X975emY8us9km8fkf5kFd1/93PV6u3fqMOOX59t3r+pa7QKicjUJWdorRKFCv//U62Cu/u1PncfCWOfL47GTOEAM9eNU7MLkWf07O/iXMQeYtc1SkVlhzF6uaX+qO6THHiz78Urep25fB6WiQl0Hd3smFRf67iG36smiaReibQT+9Er3PcPvu9Fsh87vbJalZ0vZucqnqz+8mqWcrkv0Xdm1Vjsp0WSHxQvrROzC6lPKfyZ/Pb2G2SKOC/6nfTZYr/mRHR797731Bfck8kIlCJrNBM/rXv5fctamz9dHqt+qtmF/bJVry3v7v9Vgmkm5BcfU54sH6STYWyrsxJ1ZudnaTRAokffvSkP6waiFcmP5HHP7e6Mamza5RSntPtK5n3Wn7iQdlW9Yvi9b0prDqRQb/gHklLoJtP9Ld90q2SqIrnfzefaQr0IBuNYnWfK4Ey629ev5Z9zqOVk6o3OzuJNRLRSn3/15cqv1wJoztUkd8vdLqVnV1KeU43ZYen+7CzHmwn+8WdEUhLOA/SEmil2pWqA9E1rMc2ZwIV4sds9aAEKluSXB+yPpmPN3NSjUyVnaQWaC3bhs+r8XRe9lhr0zcpOZrZVaWU56Re5VoVpVg9ulGvtTUQqA/KMdAb+RddVM3RTszd9as/nwl0sxN18PHmZie7kqq3kH/05eusmZN2zMpOUgokx7Pqh+d/+H7jFEjJYGVnl1KeU+Ww6sNMc6WozNPzL3RhV6cUSH3/eghR8uaLl/qbPxNIVb7sxS5boNuywbJyKt+usqvePH6rf96XA/hLgeRIS3dp59m5WyDZPuVWbKluYB8uBtFU6HQSJCXQm631111x/KwedSjUeEMHoYuWMVCZkxUH0tlZb+pxVFFKcn8ukMpIfNA+MccYqBxnq8njzcu6B2uEmzCN7wNrDKTaGjGWfrPR7cv7quNR33n1J60EKsoBk3MWlplZWJmTqjc7O0ndjojKV3nIGr1ogURG2q46u0Yp5pzkFO21jiqoPsvuwcoYohnNI5B4ZWqBrHCLfPl1/a4UpooDiReiWvRw4ywOZEdk6px0vVnZSaxpvKpZzyD6WRlGsk7MLsWck/WzzKsOAuWlJfLF+aWM9wb7knsiLYH0xcU3n9+pmK6gvuQogy7P9YChrFOtUR2J/q1KPX57t3rrE92XVDmZemtewbQCibJz+Vz2K7kOBZ4JZLo268TsUsw5mUi0pLAujlQDHtXI/dC8mGpHFaZJEgLNjmL6XVMoEKgHxDCLvDY/JyDQ1VFDpdkECtuAQFdHCHTz/tgnMRgQCLCAQIAFBAIsIBBgAYEACwgEWEAgwAICARYQCLCAQIAFBAIsIBBgAYEACwgEWEAgwAICARYQCLDoX6AVmBqdqrcvbyp+QrIiE/9FQB7ZcuiPCcgjGYe25Esm9l5JDSAQBGIBgSAQCwgEgVj0KND+bXW/XEFujHsGBDJH0vmSiZ0qiU1/Ah026obLQm6OEWwQBDJH0vmSiV0qiU9vApnt1o9bedtlFrrHFgQyR9L5koldapRPXwIVq/tC71QhNw7IQ+/+hkDmSDpfMrFLjfLpcQykBXqxK19WuRAxKAhkjqTzJRM7VRKbvgXSwx/3IAgC+Y+k8yUTO1USGwgEgViM0IVR2UEgcySdL5nYqZLY9C4QMYiGQP4j6XzJxE6VxCZKoONWby9Kb4xUtE3jIZD/SDpfMrH5HcdeOA8lRqDDRm83Wf7roWgLJEIg/5F0vmRi8zu2S2xWz2WlHDZnmzVefubinRiBstKbw4Zqg8zAJ/deyoBA/iPpfMnE5necoEC6V1LkrK3TIZD/SDpfMrH5HScokFWMe3bVLbsGEMgcSedLJja/Y0qgw+bjjd5jWG6+LR9E86AqV/1P9hxflE/UU01G9U5LJbbVuNVxBV+iILJrvgXYNL9QWiD5vCnzn6hWW6BMPbTBpKn5UvVOWyW21ng9p8oW34VRiXRqfKEthza/Y1qgexVoKZsESyAdfsnMZ2RXU73TWomtNa6zsl/EAYFGF8i2pSFQNYUuzPPz6ndaK7G9xouyT+TtkA2BUhHohbbCEiivBDIdY/1OayUG1Lh+Wg33QXoQKBWBWlugkx3Wa6vETjXezrzjQMkL5B1eWwI1xkB6WGQuQZnPSKp3GE7ECJSpQbxzrASB+hfIjyWQ0uK4XYuXx6164J5+q5qFqVqs3mmrRD8RAmm53QFHCJSKQHUcSD395eOLOJB5xuu14kB1o9gaB5r7eqDpCnQl+m6BjED2I9U8fbICAi1LoOOnbS2QGXo5n8kHgRYuUB7QhZlBNASCQGcflgGmoPsF5TOu//EBxkAQyPqwHkeHx6HNXc7tZUOgJQiUmTlfuECYxkOg+sMmNhkm0GGz9s3iIdAAAvkj0aodkFz8cXdaVxbTAhVdWiDZ2+FSxngCeVP8a3F6F+hk7OU+rRoCLVcgsmWJyc4AgcYQSK7UUB1KxMpWThyoCIkDhWen3gJsml9oiEDyNgk5z4lZ2cq8lPHN0hfVM1qKvvJtfseEQEa4e7nWR0bqola29r8eqFN2EGhAgawxUCZXB0atbIVAEOhkrnZHrWyFQBBIDoJ+JbyIWtk6yJJW56VUCDSIQN7htS1QfvuDGEdHrWztXSC9EHKhS1rHF4igFkjaIVuWmJWtsQLt71ZBcSC9E8x8t3eZskCmXbrZSZVURUWsbI0USN8Z5l4n1gACJSvQdYi9L0z3lgG7c1x2Yb4+WQKBliFQOaQK2Z3D/6gDCLRYgTq0QJmaHzqvu0KgxQoUPgaa+yabECjyw6GzsGXfFwaBGB/W6BZovvtEQ6CoDx/MXRYBg2iMgUYVqD0SXTh3WSlCd37iCRSyxV228q1dhEADCGT/mmcVowRyXyW4WJToJfaujHotSTwQaHyBPPc79CtQ3QLxwIrEXmh+obRApT9mver+xZ/u5As5RQrc/nJGyznIv9kEW6DoQq/XAlX+mPWq6h502an13QJdBwg0skCvTSDGWq9qdnOCQBDIfMeEQKubr7bW8rBq+U9hLf+JqcQrfTgqOwg0oEDqHgw5h6/Wq5qnu6UkUHVuYdlBoAEFUrMwdVNGORUbTCBrl7uQgrTnIWVDoGsL5J2fmTiQvhesWq96rxN6b4H0xVQxXg+6Q94Tb4RA/QtEoAU6bs1aVtml7e/M6q3wrVdil3PoJkWM1wNWdPgebQiBEhBI1I40aKXWq+7vfn2nO5Ws3ziQtaAs8HJYYNkQaDiBHEQ8/IS9oKz9cth5c+jrkyUQaBkC1WOgsjMj8FxuQQu0ZIH0PEw0Pr7uycK7Dw0ESk2gCPoPJPoH9BAIAgXgbxYh0HIF0g8MC9pgyjsEgkALFihg6FPin6ZBoMUK1GWP6E5lQ6ClCMR62q6/bAi0DIECoj9xZfe0ynNRXKFmeJUY8mHPjj/ssjktEPlnSecb3cigBWIu57j2Nr8QiC9Qwg1e2isSIZA+9LqVdFUgEARiERmJXjlvnoVASxVIbYYfPAYqbp8GWtIKgSYiUCf0yqHU9weCQMMQs73LC/9N0BBomQJZt2S0d2HFs39s0t+dAwINw8WKxPYtynLpWDNwTYUQINAyBLLuymg5RO+Jn/oOZRBoGFx3ZbQcoofP7kVlEGixApV3ZXiXO1doxdxDaQi0WIHMxdS8fQyk2yp0YRBIcn5XRsjNi7l6kEfim2xCoGGIOje5Pwem8RBIcjEGulJ2NRBoGQIluaQVAk1HoKDH9HTIrn4LsOFXTG/MdkVidGNAHtnSyEQXOocWqK/sIFBAoRDInx0ECih0FgKFPu4pMLsSCBRQ6BwECn7gnBkuJb4iMbouIVAnXDuUtR1DrCiDQHGFzkCgDg/dJT4CgeIKnYFAXR777b8JGgLFFToDgTqMgbJ3VulfC4uuSwjUiYhZ2GEjG6nMNoiKmUKggEJnIVA3Ul8PFF2XEKgT0eeW+pLW6LqEQJ2wzk09LzH4kampL2mNrksI1Alrj0Q1/fLcsmwz9+fGU0dCoHNi4kCZdCxLfElrdF1CoE5cxoECnxvvnu1DoLhCZyCQiQD5nuPUObsKCBRQ6BwEwtV4CBRB/+uBhl38OU+uW0lXBQvKLtoCRksRXWjLOv/rVtJViY4DtWZXAoEWIlBwHCgsuwoItAyBOsSBQrKrgUDLEKhLHOjk3cQDAi1WoG5xoMKzCwMEWq5AXeJAhw0EgkCKuHPLbz+DQBBIcnFux0/bx0D7F7vmGIgKeUGgJQmUh9wbL8fbGERDIIV9bkXgGEjeuAGBIJDibHeOkCmYWosIgSCQwpybXOGzDnzwbm6GO3NdEw2BuqDPzYShOzy5GS0QBFKYcys6tEAKCASBFNbF1NAxkP40BIJAEvvc5DgaKxIhUCfOzq3AHokQqBOX5/bNlQUadO3nTGHUSN9gSetgLRCV2HLodSvpqkAgCMQCAkEgFhAIArGor4X9Uf8bspwj9073IVBc4hwE0lHoImAaL5dNex7OC4HiEmcgkLol7LBxb//cQKnWfGqzI7sKCBSQOAeB1PWw4CgiBOpsAZU4C4E63ZbafLYqFfKCQAGJ8xDIPHc3gGLO2/xCoC6U64HqNiSsFztunZfjIVBc4tQFisA9DYNAcYkLFGi+2/xCoC7U53bcBnZhc9+lFQJ1wVqRGDyFl6sRPU8Jh0BxiTMQqMN66Jnv0gqBunCxP9CVsquBQAGJMxDIE1qOza4GAgUkzkCg8ChiWHb1W4ANv2J64+zW5hUW1XNaiujEObRAfWUHgQISIZA/OwgUkDgHgco+LGR/oNWcL6YyKjo6cQ4CZbdP+dpzhaLBcXuzO+XulWcQKC5xBgLJQGJx+xTw2G/tmHs7YAgUlzgLgR5O+7cf1X8hzPdqPKOioxNnIJC8uHX4YBcskPvSGQSKS5yBQKpPyu4DujBFc/krFfKCQAGJcxBIPgpVzMTC4oiF5+4NCBSXOAuBOuBdfg+B4hLnJNB/Qu5M9S39gEBxidMXqNxh/LgNuDPVf9kVAsUlTl4gOSnXTyxsvzeMeqAPBIpLnLpAajHQYfOQh+yRaPaJRhzoiolTF8jc7v5OwJ3xIdk1gEABidMXSI5qMuYTd08QKDZxJgKFxRDbs2u+Bdhwq6VHGgLxV0XPoQWiEvvb5pc8lF0v/QGBIBALCASBWMTuzkFm1wACBRQ6dYE641v0AYHiCl2aQIeNp52CQHGFLkwg/yNZIFBcocsSqFjduzd3gUCxhS5LoJNvdyAIFFvo0gWiYqYQKKDQpQtEAYECCoVAfiBQQKEQyA8ECigUAvmBQAGFQiA/ECigUAjkBwIFFLo4gToAgQIKhUB+IFBAoRCIKAGw6b2S4kn53MAEgECABQQCLCAQYAGBAAsIBFhAIMACAgEWEAiwgECABQQCLCAQYAGBAAsIBFhAIMACAgEWEAiwgECAxeACjb06dBoMXSvxDC9QdCLj0HnlmxQQaHr5JgUEml6+SQGBppdvUkCg6eWbFBBoevkmBQSaXr5JAYGml29SQKDp5ZsUEGh6+SbFhE4VpAgEAiwgEGABgQALCARYQCDAAgIBFhAIsIBAgMUSBDp8sFP/OrfXJxP74ri9H66wfhlaoMKsGn/ofqh6NvntU/fU0pGcEsiZKMhEnsXKXd+Hzf0p95ZqHqXuLHRD//70r5oUgwokvpe1fnXcnn+xrY+uL25kTec3O2fW/tSszvdSAzJRfUBV42Gz9iTu79anzJV43FIC0O1dof6+fL9qWgwp0OHDR+9PrRy3+o82c9YLmVo2Mu6TohKrpsLd+4lEWdfeRCJb6k+l7ODcv2piTGYMRI9V+hrJlHXp7v2EI5lIcCYyhjmktakxsED0eLbq4RyUbUxOtkDuVHo4QhQqMlS9yf7OaUO2Pmxunzz92/5FbA903OoM3b9MYowkkGfImnvHItXAwDP8JlNFX5CvhQXORGOXb8Cxv/MnikNvdmV1Ow/09VKU0iczaC8wBjqndch68jtED7LJVDlZKsRfM/UXfdhcvfOjGja/0q2TicQYqQWiyK/91ckxxf7tR/Wf5wP+FohTKJHYrvRESG0QXagYET0H7oocz0pz3QLJrobwVch1+5Q5G0zP4KculMiUUnpSYcbBBaJiZDJNJzkG2WTUTgaW/K2+HHEJB5x/7y19lxiI5HKc7B5EE2MnchBNK90WZkyKwSPRRDjwsKH6ESpqd1LTaeLYtZTT8xHRBHlbElnT0jtfnFpH1l2H06EeSumJzN8NAwtEhwMpyKjdydNEhJL7rq3IUmUtU1V63EbUN6U07V5ipBQHIi88kVE7utUPGVN4erKyBfIK722BlsJILZC77aYvPFFRO3LSTI8pMvLPXY+B3PElNe7y9rp0qGc2DH813h/wo0P4ZNTOFyU8ERla2foP1R64P0HOwujoJTW5m5Z7Q3dhVJiMvPAUm+lppDEFHeohJ3ct7qVFUnEg8sLTxCBDPfTkblJhxqQEIi88jQMdfSIgQz305K41cp4SYwQS/Z2//6D72H6IeW2Jjj5RUKEeenJHhxkTY4RAItH591Vo9NVtOvpEQ4V6qMldW5gxLQafxrdEdvspNHp9DR19YkBM7k4tkfO0GHwW1h7ZdR7G6Yc4K/zI6BMYrQWKWO4b3w9x1hjT0Scw0hjI1/kTcNZ5JneXg9Wi+pZQeu8lSoxxlnNEDmclUVeqk7vPyjSnqwfndIK8pJMYacWBCMa516WnBaZWc+poUXFXRi+M0w/RS/ljsRRxWBJ7SWcUBhcovnsfox+iVw8wsr0vs3VZMqVLOkMLNKXu/dTfDYvVGMg9wUvvko6XEeJAkkl07yfOCsoWVHMqA84T+SK8jBAHkkyie5fQWzqAwbuwKXXviuQiAIkx+CB6Qt07CGA603iQJCONgcBcGGkWBubC4BdTpzL9AmGMdVcGPJoJGEQDFhAIsJjGXRkgWRZxVwbojyXclQF6ZBp3ZYBkmc5dGSBJJnNXBkiTydyVAdIEcSDAIq09EsHkSOtZGWByJPesDDAtEnxWBpgSGEQDFkMLRD7TAkyPwe9MhTnzYvBrYRg9zwssqgcsBr+YOpFdFUAg4zwrA8wG3JUBWCAOBFhAIMACAgEWQwrU05anYEzQAgEWEAiwGLQL+/DR+xOYKIO2QGIQZALRxy1GQfNg+Eg08YwRMD0wBgIsIBBgAYEACwgEWEAgwAICARYQCLCAQIAFBAIsIBBgAYEACwgEWEAgwAICARYQCLCAQIAFBAIsIBBgAYEACwgEWEAgwAICARYQCLCAQIAFBAIsIBBgAYEACwgEWPwfGcgmvTuhoEoAAAAASUVORK5CYII=" /><!-- --></p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="do">## Getting final model</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="fu">fit</span>(keepsumm, <span class="at">which =</span> <span class="dv">1</span>)</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Results from gamma regression with inverse link function </span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Using the formula mpg ~ cyl + hp + wt + qsec + gear</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;               Estimate         SE       t  p.values    </span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; (Intercept) -6.464e-02  2.700e-02 -2.3940   0.02418 *  </span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; cyl          1.412e-03  1.642e-03  0.8603   0.39750    </span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; hp          -7.523e-05  3.321e-05 -2.2650   0.03205 *  </span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; wt          -1.037e-02  2.082e-03 -4.9830 3.517e-05 ***</span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; qsec         1.816e-03  9.462e-04  1.9190   0.06603 .  </span></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; gear         3.861e-03  2.155e-03  1.7910   0.08490 .  </span></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ---</span></span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Dispersion parameter taken to be 0.0089</span></span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 32 observations used to fit model</span></span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; (0 observations removed due to missingness)</span></span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Residual Deviance: 0.29 on 26 degrees of freedom</span></span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; AIC: 143.17</span></span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Algorithm converged in 3 iterations using Fisher&#39;s scoring</span></span></code></pre></div>
+</div>
+<div id="convergence-issues" class="section level2" number="1.5">
+<h2><span class="header-section-number">1.5</span> Convergence
+issues</h2>
+<ul>
+<li>It is not recommended to use branch and bound if the upper models do
+not converge since it can make the algorithm very slow.</li>
+<li>Sometimes when using backwards selection and all the upper models
+that are tested do not converge, no final model can be selected.</li>
+<li>For these reasons, if there are convergence issues it is recommended
+to use forward selection.</li>
+</ul>
+</div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
