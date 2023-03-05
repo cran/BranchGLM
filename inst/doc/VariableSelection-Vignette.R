@@ -19,7 +19,7 @@ forwardVS <- VariableSelection(GammaFit, type = "forward")
 forwardVS
 
 ## Getting final model
-fit(summary(forwardVS), which = 1)
+fit(forwardVS, which = 1)
 
 
 
@@ -29,7 +29,7 @@ backwardVS <- VariableSelection(GammaFit, type = "backward")
 backwardVS
 
 ## Getting final model
-fit(summary(backwardVS), which = 1)
+fit(backwardVS, which = 1)
 
 
 ## -----------------------------------------------------------------------------
@@ -38,7 +38,7 @@ VS <- VariableSelection(GammaFit, type = "branch and bound", showprogress = FALS
 VS
 
 ## Getting final model
-fit(summary(VS), which = 1)
+fit(VS, which = 1)
 
 
 ## -----------------------------------------------------------------------------
@@ -49,7 +49,7 @@ formulaVS <- VariableSelection(mpg ~ . ,data = cars, family = "gamma",
 formulaVS
 
 ## Getting final model
-fit(summary(formulaVS), which = 1)
+fit(formulaVS, which = 1)
 
 
 ## ---- fig.height = 4, fig.width = 6-------------------------------------------
@@ -60,27 +60,23 @@ formulaVS <- VariableSelection(mpg ~ . ,data = cars, family = "gamma",
                                bestmodels = 10)
 formulaVS
 
-## Getting summary and plotting results
-formulasumm <- summary(formulaVS) 
-plot(formulasumm, type = "b")
-plot(formulasumm, ptype = "variables")
+## Plotting results
+plot(formulaVS, type = "b")
 
 ## Getting best model
-fit(formulasumm, which = 1)
+fit(formulaVS, which = 1)
 
 
 ## ---- fig.height = 4, fig.width = 6-------------------------------------------
-# Finding all models with a AIC within 2 of the best model
+# Finding all models with an AIC within 2 of the best model
 formulaVS <- VariableSelection(mpg ~ . ,data = cars, family = "gamma", 
                                link = "inverse", type = "branch and bound",
                                showprogress = FALSE, metric = "AIC", 
                                cutoff = 2)
 formulaVS
 
-## Getting summary and plotting results
-formulasumm <- summary(formulaVS) 
-plot(formulasumm, type = "b")
-plot(formulasumm, ptype = "variables")
+## Plotting results
+plot(formulaVS, type = "b")
 
 
 ## ---- fig.height = 4, fig.width = 6-------------------------------------------
@@ -92,11 +88,9 @@ keepVS <- VariableSelection(mpg ~ . ,data = cars, family = "gamma",
 keepVS
 
 ## Getting summary and plotting results
-keepsumm <- summary(keepVS) 
-plot(keepsumm, type = "b")
-plot(keepsumm, ptype = "variables")
+plot(keepVS, type = "b")
 
 ## Getting final model
-fit(keepsumm, which = 1)
+fit(keepVS, which = 1)
 
 
