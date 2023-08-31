@@ -433,38 +433,38 @@ identity link.</li>
 <li>The dispersion parameter for this family is estimated by using the
 mean square error.</li>
 </ul>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Loading in BranchGLM</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(BranchGLM)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Fitting gaussian regression models for mtcars dataset</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>cars <span class="ot">&lt;-</span> mtcars</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="do">## Identity link</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">BranchGLM</span>(mpg <span class="sc">~</span> ., <span class="at">data =</span> cars, <span class="at">family =</span> <span class="st">&quot;gaussian&quot;</span>, <span class="at">link =</span> <span class="st">&quot;identity&quot;</span>)</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Results from gaussian regression with identity link function </span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Using the formula mpg ~ .</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;             Estimate       SE       t p.values  </span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; (Intercept) 12.30000 15.16000  0.8114  0.42620  </span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; cyl         -0.11140  0.84660 -0.1316  0.89650  </span></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; disp         0.01334  0.01447  0.9218  0.36710  </span></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; hp          -0.02148  0.01763 -1.2180  0.23670  </span></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; drat         0.78710  1.32500  0.5941  0.55880  </span></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; wt          -3.71500  1.53500 -2.4210  0.02462 *</span></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; qsec         0.82100  0.59210  1.3870  0.18010  </span></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; vs           0.31780  1.70500  0.1864  0.85390  </span></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; am           2.52000  1.66600  1.5130  0.14530  </span></span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; gear         0.65540  1.21000  0.5418  0.59370  </span></span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; carb        -0.19940  0.67140 -0.2970  0.76940  </span></span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ---</span></span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span></span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Dispersion parameter taken to be 4.6092</span></span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 32 observations used to fit model</span></span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; (0 observations removed due to missingness)</span></span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Residual Deviance: 147.49 on 21 degrees of freedom</span></span>
-<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; AIC: 163.71</span></span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="co"># Loading in BranchGLM</span></span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">library</span>(BranchGLM)</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a><span class="co"># Fitting gaussian regression models for mtcars dataset</span></span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a>cars <span class="ot">&lt;-</span> mtcars</span>
+<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a><span class="do">## Identity link</span></span>
+<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a><span class="fu">BranchGLM</span>(mpg <span class="sc">~</span> ., <span class="at">data =</span> cars, <span class="at">family =</span> <span class="st">&quot;gaussian&quot;</span>, <span class="at">link =</span> <span class="st">&quot;identity&quot;</span>)</span>
+<span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a><span class="co">#&gt; Results from gaussian regression with identity link function </span></span>
+<span id="cb1-10"><a href="#cb1-10" tabindex="-1"></a><span class="co">#&gt; Using the formula mpg ~ .</span></span>
+<span id="cb1-11"><a href="#cb1-11" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-12"><a href="#cb1-12" tabindex="-1"></a><span class="co">#&gt;             Estimate       SE       t p.values  </span></span>
+<span id="cb1-13"><a href="#cb1-13" tabindex="-1"></a><span class="co">#&gt; (Intercept) 12.30000 15.16000  0.8114  0.42620  </span></span>
+<span id="cb1-14"><a href="#cb1-14" tabindex="-1"></a><span class="co">#&gt; cyl         -0.11140  0.84660 -0.1316  0.89650  </span></span>
+<span id="cb1-15"><a href="#cb1-15" tabindex="-1"></a><span class="co">#&gt; disp         0.01334  0.01447  0.9218  0.36710  </span></span>
+<span id="cb1-16"><a href="#cb1-16" tabindex="-1"></a><span class="co">#&gt; hp          -0.02148  0.01763 -1.2180  0.23670  </span></span>
+<span id="cb1-17"><a href="#cb1-17" tabindex="-1"></a><span class="co">#&gt; drat         0.78710  1.32500  0.5941  0.55880  </span></span>
+<span id="cb1-18"><a href="#cb1-18" tabindex="-1"></a><span class="co">#&gt; wt          -3.71500  1.53500 -2.4210  0.02462 *</span></span>
+<span id="cb1-19"><a href="#cb1-19" tabindex="-1"></a><span class="co">#&gt; qsec         0.82100  0.59210  1.3870  0.18010  </span></span>
+<span id="cb1-20"><a href="#cb1-20" tabindex="-1"></a><span class="co">#&gt; vs           0.31780  1.70500  0.1864  0.85390  </span></span>
+<span id="cb1-21"><a href="#cb1-21" tabindex="-1"></a><span class="co">#&gt; am           2.52000  1.66600  1.5130  0.14530  </span></span>
+<span id="cb1-22"><a href="#cb1-22" tabindex="-1"></a><span class="co">#&gt; gear         0.65540  1.21000  0.5418  0.59370  </span></span>
+<span id="cb1-23"><a href="#cb1-23" tabindex="-1"></a><span class="co">#&gt; carb        -0.19940  0.67140 -0.2970  0.76940  </span></span>
+<span id="cb1-24"><a href="#cb1-24" tabindex="-1"></a><span class="co">#&gt; ---</span></span>
+<span id="cb1-25"><a href="#cb1-25" tabindex="-1"></a><span class="co">#&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span></span>
+<span id="cb1-26"><a href="#cb1-26" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-27"><a href="#cb1-27" tabindex="-1"></a><span class="co">#&gt; Dispersion parameter taken to be 4.6092</span></span>
+<span id="cb1-28"><a href="#cb1-28" tabindex="-1"></a><span class="co">#&gt; 32 observations used to fit model</span></span>
+<span id="cb1-29"><a href="#cb1-29" tabindex="-1"></a><span class="co">#&gt; (0 observations removed due to missingness)</span></span>
+<span id="cb1-30"><a href="#cb1-30" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-31"><a href="#cb1-31" tabindex="-1"></a><span class="co">#&gt; Residual Deviance: 147.49 on 21 degrees of freedom</span></span>
+<span id="cb1-32"><a href="#cb1-32" tabindex="-1"></a><span class="co">#&gt; AIC: 163.71</span></span></code></pre></div>
 </div>
 <div id="gamma" class="section level2" number="2.2">
 <h2><span class="header-section-number">2.2</span> Gamma</h2>
@@ -482,64 +482,64 @@ inverse and log.</li>
 likelihood,<br />
 similar to the <code>MASS::gamma.dispersion()</code> function.</li>
 </ul>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fitting gamma regression models for mtcars dataset</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="do">## Inverse link</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>GammaFit <span class="ot">&lt;-</span> <span class="fu">BranchGLM</span>(mpg <span class="sc">~</span> ., <span class="at">data =</span> cars, <span class="at">family =</span> <span class="st">&quot;gamma&quot;</span>, <span class="at">link =</span> <span class="st">&quot;inverse&quot;</span>)</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>GammaFit</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Results from gamma regression with inverse link function </span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Using the formula mpg ~ .</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;               Estimate         SE       t p.values  </span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; (Intercept)  6.794e-02  3.085e-02  2.2020  0.03898 *</span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; cyl         -1.760e-03  1.946e-03 -0.9048  0.37590  </span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; disp         7.947e-06  3.515e-05  0.2261  0.82330  </span></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; hp           6.724e-05  4.050e-05  1.6600  0.11170  </span></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; drat         4.283e-04  2.728e-03  0.1570  0.87670  </span></span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; wt           9.224e-03  3.360e-03  2.7450  0.01214 *</span></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; qsec        -1.739e-03  1.165e-03 -1.4930  0.15040  </span></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; vs           3.086e-04  3.322e-03  0.0929  0.92690  </span></span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; am          -6.305e-04  3.441e-03 -0.1832  0.85640  </span></span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; gear        -4.882e-03  2.577e-03 -1.8940  0.07203 .</span></span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; carb         1.025e-03  1.481e-03  0.6926  0.49610  </span></span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ---</span></span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span></span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Dispersion parameter taken to be 0.0087</span></span>
-<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 32 observations used to fit model</span></span>
-<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; (0 observations removed due to missingness)</span></span>
-<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Residual Deviance: 0.28 on 21 degrees of freedom</span></span>
-<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; AIC: 152.3</span></span>
-<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Algorithm converged in 3 iterations using Fisher&#39;s scoring</span></span>
-<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a><span class="do">## Log link</span></span>
-<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>GammaFit <span class="ot">&lt;-</span> <span class="fu">BranchGLM</span>(mpg <span class="sc">~</span> ., <span class="at">data =</span> cars, <span class="at">family =</span> <span class="st">&quot;gamma&quot;</span>, <span class="at">link =</span> <span class="st">&quot;log&quot;</span>)</span>
-<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>GammaFit</span>
-<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Results from gamma regression with log link function </span></span>
-<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Using the formula mpg ~ .</span></span>
-<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;               Estimate         SE       t  p.values    </span></span>
-<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; (Intercept)  2.754e+00  6.934e-01  3.9720 0.0006942 ***</span></span>
-<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; cyl          7.509e-03  3.871e-02  0.1940 0.8481000    </span></span>
-<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; disp         6.521e-05  6.615e-04  0.0986 0.9224000    </span></span>
-<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; hp          -8.898e-04  8.064e-04 -1.1030 0.2823000    </span></span>
-<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; drat         2.366e-02  6.058e-02  0.3906 0.7000000    </span></span>
-<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; wt          -1.655e-01  7.017e-02 -2.3590 0.0281100 *  </span></span>
-<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; qsec         3.055e-02  2.707e-02  1.1290 0.2718000    </span></span>
-<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; vs          -1.141e-03  7.796e-02 -0.0146 0.9885000    </span></span>
-<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; am           5.421e-02  7.618e-02  0.7115 0.4846000    </span></span>
-<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; gear         6.014e-02  5.531e-02  1.0870 0.2893000    </span></span>
-<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; carb        -2.277e-02  3.070e-02 -0.7418 0.4664000    </span></span>
-<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ---</span></span>
-<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span></span>
-<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Dispersion parameter taken to be 0.0096</span></span>
-<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 32 observations used to fit model</span></span>
-<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; (0 observations removed due to missingness)</span></span>
-<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Residual Deviance: 0.31 on 21 degrees of freedom</span></span>
-<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; AIC: 155.65</span></span>
-<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Algorithm converged in 2 iterations using Fisher&#39;s scoring</span></span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="co"># Fitting gamma regression models for mtcars dataset</span></span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="do">## Inverse link</span></span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a>GammaFit <span class="ot">&lt;-</span> <span class="fu">BranchGLM</span>(mpg <span class="sc">~</span> ., <span class="at">data =</span> cars, <span class="at">family =</span> <span class="st">&quot;gamma&quot;</span>, <span class="at">link =</span> <span class="st">&quot;inverse&quot;</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a>GammaFit</span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a><span class="co">#&gt; Results from gamma regression with inverse link function </span></span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a><span class="co">#&gt; Using the formula mpg ~ .</span></span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a><span class="co">#&gt;               Estimate         SE       t p.values  </span></span>
+<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a><span class="co">#&gt; (Intercept)  6.794e-02  3.085e-02  2.2020  0.03898 *</span></span>
+<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a><span class="co">#&gt; cyl         -1.760e-03  1.946e-03 -0.9048  0.37590  </span></span>
+<span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a><span class="co">#&gt; disp         7.947e-06  3.515e-05  0.2261  0.82330  </span></span>
+<span id="cb2-12"><a href="#cb2-12" tabindex="-1"></a><span class="co">#&gt; hp           6.724e-05  4.050e-05  1.6600  0.11170  </span></span>
+<span id="cb2-13"><a href="#cb2-13" tabindex="-1"></a><span class="co">#&gt; drat         4.283e-04  2.728e-03  0.1570  0.87670  </span></span>
+<span id="cb2-14"><a href="#cb2-14" tabindex="-1"></a><span class="co">#&gt; wt           9.224e-03  3.360e-03  2.7450  0.01214 *</span></span>
+<span id="cb2-15"><a href="#cb2-15" tabindex="-1"></a><span class="co">#&gt; qsec        -1.739e-03  1.165e-03 -1.4930  0.15040  </span></span>
+<span id="cb2-16"><a href="#cb2-16" tabindex="-1"></a><span class="co">#&gt; vs           3.086e-04  3.322e-03  0.0929  0.92690  </span></span>
+<span id="cb2-17"><a href="#cb2-17" tabindex="-1"></a><span class="co">#&gt; am          -6.305e-04  3.441e-03 -0.1832  0.85640  </span></span>
+<span id="cb2-18"><a href="#cb2-18" tabindex="-1"></a><span class="co">#&gt; gear        -4.882e-03  2.577e-03 -1.8940  0.07203 .</span></span>
+<span id="cb2-19"><a href="#cb2-19" tabindex="-1"></a><span class="co">#&gt; carb         1.025e-03  1.481e-03  0.6926  0.49610  </span></span>
+<span id="cb2-20"><a href="#cb2-20" tabindex="-1"></a><span class="co">#&gt; ---</span></span>
+<span id="cb2-21"><a href="#cb2-21" tabindex="-1"></a><span class="co">#&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span></span>
+<span id="cb2-22"><a href="#cb2-22" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb2-23"><a href="#cb2-23" tabindex="-1"></a><span class="co">#&gt; Dispersion parameter taken to be 0.0087</span></span>
+<span id="cb2-24"><a href="#cb2-24" tabindex="-1"></a><span class="co">#&gt; 32 observations used to fit model</span></span>
+<span id="cb2-25"><a href="#cb2-25" tabindex="-1"></a><span class="co">#&gt; (0 observations removed due to missingness)</span></span>
+<span id="cb2-26"><a href="#cb2-26" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb2-27"><a href="#cb2-27" tabindex="-1"></a><span class="co">#&gt; Residual Deviance: 0.28 on 21 degrees of freedom</span></span>
+<span id="cb2-28"><a href="#cb2-28" tabindex="-1"></a><span class="co">#&gt; AIC: 152.3</span></span>
+<span id="cb2-29"><a href="#cb2-29" tabindex="-1"></a><span class="co">#&gt; Algorithm converged in 3 iterations using Fisher&#39;s scoring</span></span>
+<span id="cb2-30"><a href="#cb2-30" tabindex="-1"></a></span>
+<span id="cb2-31"><a href="#cb2-31" tabindex="-1"></a><span class="do">## Log link</span></span>
+<span id="cb2-32"><a href="#cb2-32" tabindex="-1"></a>GammaFit <span class="ot">&lt;-</span> <span class="fu">BranchGLM</span>(mpg <span class="sc">~</span> ., <span class="at">data =</span> cars, <span class="at">family =</span> <span class="st">&quot;gamma&quot;</span>, <span class="at">link =</span> <span class="st">&quot;log&quot;</span>)</span>
+<span id="cb2-33"><a href="#cb2-33" tabindex="-1"></a>GammaFit</span>
+<span id="cb2-34"><a href="#cb2-34" tabindex="-1"></a><span class="co">#&gt; Results from gamma regression with log link function </span></span>
+<span id="cb2-35"><a href="#cb2-35" tabindex="-1"></a><span class="co">#&gt; Using the formula mpg ~ .</span></span>
+<span id="cb2-36"><a href="#cb2-36" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb2-37"><a href="#cb2-37" tabindex="-1"></a><span class="co">#&gt;               Estimate         SE       t  p.values    </span></span>
+<span id="cb2-38"><a href="#cb2-38" tabindex="-1"></a><span class="co">#&gt; (Intercept)  2.754e+00  6.934e-01  3.9720 0.0006942 ***</span></span>
+<span id="cb2-39"><a href="#cb2-39" tabindex="-1"></a><span class="co">#&gt; cyl          7.509e-03  3.871e-02  0.1940 0.8481000    </span></span>
+<span id="cb2-40"><a href="#cb2-40" tabindex="-1"></a><span class="co">#&gt; disp         6.521e-05  6.615e-04  0.0986 0.9224000    </span></span>
+<span id="cb2-41"><a href="#cb2-41" tabindex="-1"></a><span class="co">#&gt; hp          -8.898e-04  8.064e-04 -1.1030 0.2823000    </span></span>
+<span id="cb2-42"><a href="#cb2-42" tabindex="-1"></a><span class="co">#&gt; drat         2.366e-02  6.058e-02  0.3906 0.7000000    </span></span>
+<span id="cb2-43"><a href="#cb2-43" tabindex="-1"></a><span class="co">#&gt; wt          -1.655e-01  7.017e-02 -2.3590 0.0281100 *  </span></span>
+<span id="cb2-44"><a href="#cb2-44" tabindex="-1"></a><span class="co">#&gt; qsec         3.055e-02  2.707e-02  1.1290 0.2718000    </span></span>
+<span id="cb2-45"><a href="#cb2-45" tabindex="-1"></a><span class="co">#&gt; vs          -1.141e-03  7.796e-02 -0.0146 0.9885000    </span></span>
+<span id="cb2-46"><a href="#cb2-46" tabindex="-1"></a><span class="co">#&gt; am           5.421e-02  7.618e-02  0.7115 0.4846000    </span></span>
+<span id="cb2-47"><a href="#cb2-47" tabindex="-1"></a><span class="co">#&gt; gear         6.014e-02  5.531e-02  1.0870 0.2893000    </span></span>
+<span id="cb2-48"><a href="#cb2-48" tabindex="-1"></a><span class="co">#&gt; carb        -2.277e-02  3.070e-02 -0.7418 0.4664000    </span></span>
+<span id="cb2-49"><a href="#cb2-49" tabindex="-1"></a><span class="co">#&gt; ---</span></span>
+<span id="cb2-50"><a href="#cb2-50" tabindex="-1"></a><span class="co">#&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span></span>
+<span id="cb2-51"><a href="#cb2-51" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb2-52"><a href="#cb2-52" tabindex="-1"></a><span class="co">#&gt; Dispersion parameter taken to be 0.0096</span></span>
+<span id="cb2-53"><a href="#cb2-53" tabindex="-1"></a><span class="co">#&gt; 32 observations used to fit model</span></span>
+<span id="cb2-54"><a href="#cb2-54" tabindex="-1"></a><span class="co">#&gt; (0 observations removed due to missingness)</span></span>
+<span id="cb2-55"><a href="#cb2-55" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb2-56"><a href="#cb2-56" tabindex="-1"></a><span class="co">#&gt; Residual Deviance: 0.31 on 21 degrees of freedom</span></span>
+<span id="cb2-57"><a href="#cb2-57" tabindex="-1"></a><span class="co">#&gt; AIC: 155.65</span></span>
+<span id="cb2-58"><a href="#cb2-58" tabindex="-1"></a><span class="co">#&gt; Algorithm converged in 2 iterations using Fisher&#39;s scoring</span></span></code></pre></div>
 </div>
 <div id="poisson" class="section level2" number="2.3">
 <h2><span class="header-section-number">2.3</span> Poisson</h2>
@@ -554,29 +554,29 @@ similar to the <code>MASS::gamma.dispersion()</code> function.</li>
 log link.</li>
 <li>The dispersion parameter for this family is always 1.</li>
 </ul>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fitting poisson regression models for warpbreaks dataset</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>warp <span class="ot">&lt;-</span> warpbreaks</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="do">## Log link</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu">BranchGLM</span>(breaks <span class="sc">~</span> ., <span class="at">data =</span> warp, <span class="at">family =</span> <span class="st">&quot;poisson&quot;</span>, <span class="at">link =</span> <span class="st">&quot;log&quot;</span>)</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Results from poisson regression with log link function </span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Using the formula breaks ~ .</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;             Estimate       SE      z  p.values    </span></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; (Intercept)  3.69200  0.04541 81.300 &lt; 2.2e-16 ***</span></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; woolB       -0.20600  0.05157 -3.994 6.490e-05 ***</span></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; tensionM    -0.32130  0.06027 -5.332 9.729e-08 ***</span></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; tensionH    -0.51850  0.06396 -8.107 5.209e-16 ***</span></span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ---</span></span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span></span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Dispersion parameter taken to be 1</span></span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 54 observations used to fit model</span></span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; (0 observations removed due to missingness)</span></span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Residual Deviance: 210.39 on 50 degrees of freedom</span></span>
-<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; AIC: 493.06</span></span>
-<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Algorithm converged in 3 iterations using Fisher&#39;s scoring</span></span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="co"># Fitting poisson regression models for warpbreaks dataset</span></span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>warp <span class="ot">&lt;-</span> warpbreaks</span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a><span class="do">## Log link</span></span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a><span class="fu">BranchGLM</span>(breaks <span class="sc">~</span> ., <span class="at">data =</span> warp, <span class="at">family =</span> <span class="st">&quot;poisson&quot;</span>, <span class="at">link =</span> <span class="st">&quot;log&quot;</span>)</span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a><span class="co">#&gt; Results from poisson regression with log link function </span></span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a><span class="co">#&gt; Using the formula breaks ~ .</span></span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a><span class="co">#&gt;             Estimate       SE      z  p.values    </span></span>
+<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a><span class="co">#&gt; (Intercept)  3.69200  0.04541 81.300 &lt; 2.2e-16 ***</span></span>
+<span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a><span class="co">#&gt; woolB       -0.20600  0.05157 -3.994 6.490e-05 ***</span></span>
+<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a><span class="co">#&gt; tensionM    -0.32130  0.06027 -5.332 9.729e-08 ***</span></span>
+<span id="cb3-13"><a href="#cb3-13" tabindex="-1"></a><span class="co">#&gt; tensionH    -0.51850  0.06396 -8.107 5.209e-16 ***</span></span>
+<span id="cb3-14"><a href="#cb3-14" tabindex="-1"></a><span class="co">#&gt; ---</span></span>
+<span id="cb3-15"><a href="#cb3-15" tabindex="-1"></a><span class="co">#&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span></span>
+<span id="cb3-16"><a href="#cb3-16" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-17"><a href="#cb3-17" tabindex="-1"></a><span class="co">#&gt; Dispersion parameter taken to be 1</span></span>
+<span id="cb3-18"><a href="#cb3-18" tabindex="-1"></a><span class="co">#&gt; 54 observations used to fit model</span></span>
+<span id="cb3-19"><a href="#cb3-19" tabindex="-1"></a><span class="co">#&gt; (0 observations removed due to missingness)</span></span>
+<span id="cb3-20"><a href="#cb3-20" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-21"><a href="#cb3-21" tabindex="-1"></a><span class="co">#&gt; Residual Deviance: 210.39 on 50 degrees of freedom</span></span>
+<span id="cb3-22"><a href="#cb3-22" tabindex="-1"></a><span class="co">#&gt; AIC: 493.06</span></span>
+<span id="cb3-23"><a href="#cb3-23" tabindex="-1"></a><span class="co">#&gt; Algorithm converged in 3 iterations using Fisher&#39;s scoring</span></span></code></pre></div>
 </div>
 <div id="binomial" class="section level2" number="2.4">
 <h2><span class="header-section-number">2.4</span> Binomial</h2>
@@ -592,48 +592,48 @@ log link.</li>
 logit and probit.</li>
 <li>The dispersion parameter for this family is always 1.</li>
 </ul>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fitting binomial regression models for toothgrowth dataset</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>Data <span class="ot">&lt;-</span> ToothGrowth</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="do">## Logit link</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="fu">BranchGLM</span>(supp <span class="sc">~</span> ., <span class="at">data =</span> Data, <span class="at">family =</span> <span class="st">&quot;binomial&quot;</span>, <span class="at">link =</span> <span class="st">&quot;logit&quot;</span>)</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Results from binomial regression with logit link function </span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Using the formula supp ~ .</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;             Estimate      SE      z p.values   </span></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; (Intercept)   1.5380  0.7860  1.956 0.050440 . </span></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; len          -0.2127  0.0728 -2.921 0.003484 **</span></span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; dose          2.0890  0.8497  2.458 0.013970 * </span></span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ---</span></span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span></span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Dispersion parameter taken to be 1</span></span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 60 observations used to fit model</span></span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; (0 observations removed due to missingness)</span></span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Residual Deviance: 72.33 on 57 degrees of freedom</span></span>
-<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; AIC: 78.33</span></span>
-<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Algorithm converged in 4 iterations using Fisher&#39;s scoring</span></span>
-<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a><span class="do">## Probit link</span></span>
-<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a><span class="fu">BranchGLM</span>(supp <span class="sc">~</span> ., <span class="at">data =</span> Data, <span class="at">family =</span> <span class="st">&quot;binomial&quot;</span>, <span class="at">link =</span> <span class="st">&quot;probit&quot;</span>)</span>
-<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Results from binomial regression with probit link function </span></span>
-<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Using the formula supp ~ .</span></span>
-<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;             Estimate       SE      z p.values   </span></span>
-<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; (Intercept)  0.94020  0.46900  2.005 0.045000 * </span></span>
-<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; len         -0.13180  0.04195 -3.142 0.001678 **</span></span>
-<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; dose         1.30800  0.49710  2.631 0.008502 **</span></span>
-<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ---</span></span>
-<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span></span>
-<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Dispersion parameter taken to be 1</span></span>
-<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 60 observations used to fit model</span></span>
-<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; (0 observations removed due to missingness)</span></span>
-<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Residual Deviance: 72.19 on 57 degrees of freedom</span></span>
-<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; AIC: 78.19</span></span>
-<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Algorithm converged in 5 iterations using Fisher&#39;s scoring</span></span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="co"># Fitting binomial regression models for toothgrowth dataset</span></span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>Data <span class="ot">&lt;-</span> ToothGrowth</span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a><span class="do">## Logit link</span></span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a><span class="fu">BranchGLM</span>(supp <span class="sc">~</span> ., <span class="at">data =</span> Data, <span class="at">family =</span> <span class="st">&quot;binomial&quot;</span>, <span class="at">link =</span> <span class="st">&quot;logit&quot;</span>)</span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a><span class="co">#&gt; Results from binomial regression with logit link function </span></span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a><span class="co">#&gt; Using the formula supp ~ .</span></span>
+<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a><span class="co">#&gt;             Estimate      SE      z p.values   </span></span>
+<span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a><span class="co">#&gt; (Intercept)   1.5380  0.7860  1.956 0.050440 . </span></span>
+<span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a><span class="co">#&gt; len          -0.2127  0.0728 -2.921 0.003484 **</span></span>
+<span id="cb4-12"><a href="#cb4-12" tabindex="-1"></a><span class="co">#&gt; dose          2.0890  0.8497  2.458 0.013970 * </span></span>
+<span id="cb4-13"><a href="#cb4-13" tabindex="-1"></a><span class="co">#&gt; ---</span></span>
+<span id="cb4-14"><a href="#cb4-14" tabindex="-1"></a><span class="co">#&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span></span>
+<span id="cb4-15"><a href="#cb4-15" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb4-16"><a href="#cb4-16" tabindex="-1"></a><span class="co">#&gt; Dispersion parameter taken to be 1</span></span>
+<span id="cb4-17"><a href="#cb4-17" tabindex="-1"></a><span class="co">#&gt; 60 observations used to fit model</span></span>
+<span id="cb4-18"><a href="#cb4-18" tabindex="-1"></a><span class="co">#&gt; (0 observations removed due to missingness)</span></span>
+<span id="cb4-19"><a href="#cb4-19" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb4-20"><a href="#cb4-20" tabindex="-1"></a><span class="co">#&gt; Residual Deviance: 72.33 on 57 degrees of freedom</span></span>
+<span id="cb4-21"><a href="#cb4-21" tabindex="-1"></a><span class="co">#&gt; AIC: 78.33</span></span>
+<span id="cb4-22"><a href="#cb4-22" tabindex="-1"></a><span class="co">#&gt; Algorithm converged in 4 iterations using Fisher&#39;s scoring</span></span>
+<span id="cb4-23"><a href="#cb4-23" tabindex="-1"></a></span>
+<span id="cb4-24"><a href="#cb4-24" tabindex="-1"></a><span class="do">## Probit link</span></span>
+<span id="cb4-25"><a href="#cb4-25" tabindex="-1"></a><span class="fu">BranchGLM</span>(supp <span class="sc">~</span> ., <span class="at">data =</span> Data, <span class="at">family =</span> <span class="st">&quot;binomial&quot;</span>, <span class="at">link =</span> <span class="st">&quot;probit&quot;</span>)</span>
+<span id="cb4-26"><a href="#cb4-26" tabindex="-1"></a><span class="co">#&gt; Results from binomial regression with probit link function </span></span>
+<span id="cb4-27"><a href="#cb4-27" tabindex="-1"></a><span class="co">#&gt; Using the formula supp ~ .</span></span>
+<span id="cb4-28"><a href="#cb4-28" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb4-29"><a href="#cb4-29" tabindex="-1"></a><span class="co">#&gt;             Estimate       SE      z p.values   </span></span>
+<span id="cb4-30"><a href="#cb4-30" tabindex="-1"></a><span class="co">#&gt; (Intercept)  0.94020  0.46900  2.005 0.045000 * </span></span>
+<span id="cb4-31"><a href="#cb4-31" tabindex="-1"></a><span class="co">#&gt; len         -0.13180  0.04195 -3.142 0.001678 **</span></span>
+<span id="cb4-32"><a href="#cb4-32" tabindex="-1"></a><span class="co">#&gt; dose         1.30800  0.49710  2.631 0.008502 **</span></span>
+<span id="cb4-33"><a href="#cb4-33" tabindex="-1"></a><span class="co">#&gt; ---</span></span>
+<span id="cb4-34"><a href="#cb4-34" tabindex="-1"></a><span class="co">#&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span></span>
+<span id="cb4-35"><a href="#cb4-35" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb4-36"><a href="#cb4-36" tabindex="-1"></a><span class="co">#&gt; Dispersion parameter taken to be 1</span></span>
+<span id="cb4-37"><a href="#cb4-37" tabindex="-1"></a><span class="co">#&gt; 60 observations used to fit model</span></span>
+<span id="cb4-38"><a href="#cb4-38" tabindex="-1"></a><span class="co">#&gt; (0 observations removed due to missingness)</span></span>
+<span id="cb4-39"><a href="#cb4-39" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb4-40"><a href="#cb4-40" tabindex="-1"></a><span class="co">#&gt; Residual Deviance: 72.19 on 57 degrees of freedom</span></span>
+<span id="cb4-41"><a href="#cb4-41" tabindex="-1"></a><span class="co">#&gt; AIC: 78.19</span></span>
+<span id="cb4-42"><a href="#cb4-42" tabindex="-1"></a><span class="co">#&gt; Algorithm converged in 5 iterations using Fisher&#39;s scoring</span></span></code></pre></div>
 <div id="functions-for-binomial-glms" class="section level3" number="2.4.1">
 <h3><span class="header-section-number">2.4.1</span> Functions for
 binomial GLMs</h3>
@@ -653,56 +653,56 @@ ROC curves on the same plot</li>
 </ul>
 <div id="table" class="section level4" number="2.4.1.1">
 <h4><span class="header-section-number">2.4.1.1</span> Table</h4>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fitting logistic regression model for toothgrowth dataset</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>catFit <span class="ot">&lt;-</span> <span class="fu">BranchGLM</span>(supp <span class="sc">~</span> ., <span class="at">data =</span> Data, <span class="at">family =</span> <span class="st">&quot;binomial&quot;</span>, <span class="at">link =</span> <span class="st">&quot;logit&quot;</span>)</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="fu">Table</span>(catFit)</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Confusion matrix:</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ----------------------</span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;             Predicted</span></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;              OJ   VC</span></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;          OJ  17   13</span></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Observed</span></span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;          VC  7    23</span></span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ----------------------</span></span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Measures:</span></span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ----------------------</span></span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Accuracy:  0.6667 </span></span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Sensitivity:  0.7667 </span></span>
-<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Specificity:  0.5667 </span></span>
-<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; PPV:  0.6389</span></span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="co"># Fitting logistic regression model for toothgrowth dataset</span></span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>catFit <span class="ot">&lt;-</span> <span class="fu">BranchGLM</span>(supp <span class="sc">~</span> ., <span class="at">data =</span> Data, <span class="at">family =</span> <span class="st">&quot;binomial&quot;</span>, <span class="at">link =</span> <span class="st">&quot;logit&quot;</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a><span class="fu">Table</span>(catFit)</span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a><span class="co">#&gt; Confusion matrix:</span></span>
+<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a><span class="co">#&gt; ----------------------</span></span>
+<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a><span class="co">#&gt;             Predicted</span></span>
+<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a><span class="co">#&gt;              OJ   VC</span></span>
+<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-10"><a href="#cb5-10" tabindex="-1"></a><span class="co">#&gt;          OJ  17   13</span></span>
+<span id="cb5-11"><a href="#cb5-11" tabindex="-1"></a><span class="co">#&gt; Observed</span></span>
+<span id="cb5-12"><a href="#cb5-12" tabindex="-1"></a><span class="co">#&gt;          VC  7    23</span></span>
+<span id="cb5-13"><a href="#cb5-13" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-14"><a href="#cb5-14" tabindex="-1"></a><span class="co">#&gt; ----------------------</span></span>
+<span id="cb5-15"><a href="#cb5-15" tabindex="-1"></a><span class="co">#&gt; Measures:</span></span>
+<span id="cb5-16"><a href="#cb5-16" tabindex="-1"></a><span class="co">#&gt; ----------------------</span></span>
+<span id="cb5-17"><a href="#cb5-17" tabindex="-1"></a><span class="co">#&gt; Accuracy:  0.6667 </span></span>
+<span id="cb5-18"><a href="#cb5-18" tabindex="-1"></a><span class="co">#&gt; Sensitivity:  0.7667 </span></span>
+<span id="cb5-19"><a href="#cb5-19" tabindex="-1"></a><span class="co">#&gt; Specificity:  0.5667 </span></span>
+<span id="cb5-20"><a href="#cb5-20" tabindex="-1"></a><span class="co">#&gt; PPV:  0.6389</span></span></code></pre></div>
 </div>
 <div id="roc" class="section level4" number="2.4.1.2">
 <h4><span class="header-section-number">2.4.1.2</span> ROC</h4>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Creating ROC curve</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>catROC <span class="ot">&lt;-</span> <span class="fu">ROC</span>(catFit)</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(catROC, <span class="at">main =</span> <span class="st">&quot;ROC Curve&quot;</span>, <span class="at">col =</span> <span class="st">&quot;indianred&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="co"># Creating ROC curve</span></span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>catROC <span class="ot">&lt;-</span> <span class="fu">ROC</span>(catFit)</span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a><span class="fu">plot</span>(catROC, <span class="at">main =</span> <span class="st">&quot;ROC Curve&quot;</span>, <span class="at">col =</span> <span class="st">&quot;indianred&quot;</span>)</span></code></pre></div>
 <p><img src="data:image/png;base64,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" /><!-- --></p>
 </div>
 <div id="cindexauc" class="section level4" number="2.4.1.3">
 <h4><span class="header-section-number">2.4.1.3</span> Cindex/AUC</h4>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Getting Cindex/AUC</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">Cindex</span>(catFit)</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.7127778</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="fu">AUC</span>(catFit)</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.7127778</span></span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="co"># Getting Cindex/AUC</span></span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a><span class="fu">Cindex</span>(catFit)</span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a><span class="co">#&gt; [1] 0.7127778</span></span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a><span class="fu">AUC</span>(catFit)</span>
+<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a><span class="co">#&gt; [1] 0.7127778</span></span></code></pre></div>
 </div>
 <div id="multiplerocplots" class="section level4" number="2.4.1.4">
 <h4><span class="header-section-number">2.4.1.4</span>
 MultipleROCPlots</h4>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Showing ROC plots for logit, probit, and cloglog</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>probitFit <span class="ot">&lt;-</span> <span class="fu">BranchGLM</span>(supp <span class="sc">~</span> . ,<span class="at">data =</span> Data, <span class="at">family =</span> <span class="st">&quot;binomial&quot;</span>, </span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>                       <span class="at">link =</span> <span class="st">&quot;probit&quot;</span>)</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>cloglogFit <span class="ot">&lt;-</span> <span class="fu">BranchGLM</span>(supp <span class="sc">~</span> . ,<span class="at">data =</span> Data, <span class="at">family =</span> <span class="st">&quot;binomial&quot;</span>, </span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>                       <span class="at">link =</span> <span class="st">&quot;cloglog&quot;</span>)</span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="fu">MultipleROCCurves</span>(catROC, <span class="fu">ROC</span>(probitFit), <span class="fu">ROC</span>(cloglogFit), </span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>                  <span class="at">names =</span> <span class="fu">c</span>(<span class="st">&quot;Logistic ROC&quot;</span>, <span class="st">&quot;Probit ROC&quot;</span>, <span class="st">&quot;Cloglog ROC&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="co"># Showing ROC plots for logit, probit, and cloglog</span></span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>probitFit <span class="ot">&lt;-</span> <span class="fu">BranchGLM</span>(supp <span class="sc">~</span> . ,<span class="at">data =</span> Data, <span class="at">family =</span> <span class="st">&quot;binomial&quot;</span>, </span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a>                       <span class="at">link =</span> <span class="st">&quot;probit&quot;</span>)</span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a>cloglogFit <span class="ot">&lt;-</span> <span class="fu">BranchGLM</span>(supp <span class="sc">~</span> . ,<span class="at">data =</span> Data, <span class="at">family =</span> <span class="st">&quot;binomial&quot;</span>, </span>
+<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a>                       <span class="at">link =</span> <span class="st">&quot;cloglog&quot;</span>)</span>
+<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a></span>
+<span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a><span class="fu">MultipleROCCurves</span>(catROC, <span class="fu">ROC</span>(probitFit), <span class="fu">ROC</span>(cloglogFit), </span>
+<span id="cb8-9"><a href="#cb8-9" tabindex="-1"></a>                  <span class="at">names =</span> <span class="fu">c</span>(<span class="st">&quot;Logistic ROC&quot;</span>, <span class="st">&quot;Probit ROC&quot;</span>, <span class="st">&quot;Cloglog ROC&quot;</span>))</span></code></pre></div>
 <p><img src="data:image/png;base64,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CACyCACyCACyCACyVgPA8v80Eu8Sn9+yLLZC11X1O+s78fJThf7fBsuitQCw/D+NpNPW0bkDduxDeNbHKHC1EgDN2JMuN987vb1GC5sAeMn2/zSySv706vuD2j5eV9aPa/nJbEbvJ1HgnXNX34pN5G6X+axaB4B21D3l7M7HylN+Alh44AlPilp8LfiGP+n6v/65RnhLIteENQMQ73xQHnfC+Z1/IftGXqvtvg1g7BzMazujVg2gFW/3EM+88OG6eJQ+QexQO0F2Crt3jjciU18jWkxrB9AK/y3lE8oAaJ9J/WSPPe0GAIvz6P2l4MRaHwDTyuoHmpX7GYDuk4JqwPPbv71FtkArBGCke0HsL7INOPI2wHzk3d0GsBheY1ugNQNQrwnirvWng36ZhngPAR+b8R8M0aAXZM6JZhvk+ZhVawYgpyJ4iZ8O3xyUs3ytZydMn/8MwDrXHjk99D7QigDMyvXih8lwv8W2QDsHUKNboF0DOB3Qm+CtAFixCACyCACyCACyCACyCACyCACyCACyCACyCACyCACyCACyCACyCACyCACyCACyCACyCACyCACyCACyCACyfgWtbVNVsI1hjwAAAABJRU5ErkJggg==" /><!-- --></p>
 </div>
 <div id="using-predictions" class="section level4" number="2.4.1.5">
@@ -713,31 +713,31 @@ predictions</h4>
 and observed classes can also be supplied instead of the
 <code>BranchGLM</code> object.</li>
 </ul>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>preds <span class="ot">&lt;-</span> <span class="fu">predict</span>(catFit)</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="fu">Table</span>(preds, Data<span class="sc">$</span>supp)</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Confusion matrix:</span></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ----------------------</span></span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;             Predicted</span></span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;              OJ   VC</span></span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;          OJ  17   13</span></span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Observed</span></span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;          VC  7    23</span></span>
-<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ----------------------</span></span>
-<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Measures:</span></span>
-<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ----------------------</span></span>
-<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Accuracy:  0.6667 </span></span>
-<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Sensitivity:  0.7667 </span></span>
-<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Specificity:  0.5667 </span></span>
-<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; PPV:  0.6389</span></span>
-<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a><span class="fu">AUC</span>(preds, Data<span class="sc">$</span>supp)</span>
-<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.7127778</span></span>
-<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a><span class="fu">ROC</span>(preds, Data<span class="sc">$</span>supp) <span class="sc">|&gt;</span> <span class="fu">plot</span>(<span class="at">main =</span> <span class="st">&quot;ROC Curve&quot;</span>, <span class="at">col =</span> <span class="st">&quot;deepskyblue&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a></span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a>preds <span class="ot">&lt;-</span> <span class="fu">predict</span>(catFit)</span>
+<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a><span class="fu">Table</span>(preds, Data<span class="sc">$</span>supp)</span>
+<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a><span class="co">#&gt; Confusion matrix:</span></span>
+<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a><span class="co">#&gt; ----------------------</span></span>
+<span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a><span class="co">#&gt;             Predicted</span></span>
+<span id="cb9-8"><a href="#cb9-8" tabindex="-1"></a><span class="co">#&gt;              OJ   VC</span></span>
+<span id="cb9-9"><a href="#cb9-9" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb9-10"><a href="#cb9-10" tabindex="-1"></a><span class="co">#&gt;          OJ  17   13</span></span>
+<span id="cb9-11"><a href="#cb9-11" tabindex="-1"></a><span class="co">#&gt; Observed</span></span>
+<span id="cb9-12"><a href="#cb9-12" tabindex="-1"></a><span class="co">#&gt;          VC  7    23</span></span>
+<span id="cb9-13"><a href="#cb9-13" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb9-14"><a href="#cb9-14" tabindex="-1"></a><span class="co">#&gt; ----------------------</span></span>
+<span id="cb9-15"><a href="#cb9-15" tabindex="-1"></a><span class="co">#&gt; Measures:</span></span>
+<span id="cb9-16"><a href="#cb9-16" tabindex="-1"></a><span class="co">#&gt; ----------------------</span></span>
+<span id="cb9-17"><a href="#cb9-17" tabindex="-1"></a><span class="co">#&gt; Accuracy:  0.6667 </span></span>
+<span id="cb9-18"><a href="#cb9-18" tabindex="-1"></a><span class="co">#&gt; Sensitivity:  0.7667 </span></span>
+<span id="cb9-19"><a href="#cb9-19" tabindex="-1"></a><span class="co">#&gt; Specificity:  0.5667 </span></span>
+<span id="cb9-20"><a href="#cb9-20" tabindex="-1"></a><span class="co">#&gt; PPV:  0.6389</span></span>
+<span id="cb9-21"><a href="#cb9-21" tabindex="-1"></a></span>
+<span id="cb9-22"><a href="#cb9-22" tabindex="-1"></a><span class="fu">AUC</span>(preds, Data<span class="sc">$</span>supp)</span>
+<span id="cb9-23"><a href="#cb9-23" tabindex="-1"></a><span class="co">#&gt; [1] 0.7127778</span></span>
+<span id="cb9-24"><a href="#cb9-24" tabindex="-1"></a></span>
+<span id="cb9-25"><a href="#cb9-25" tabindex="-1"></a><span class="fu">ROC</span>(preds, Data<span class="sc">$</span>supp) <span class="sc">|&gt;</span> <span class="fu">plot</span>(<span class="at">main =</span> <span class="st">&quot;ROC Curve&quot;</span>, <span class="at">col =</span> <span class="st">&quot;deepskyblue&quot;</span>)</span></code></pre></div>
 <p><img src="data:image/png;base64,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" /><!-- --></p>
 </div>
 </div>
@@ -760,27 +760,27 @@ model</li>
 p-values are stored in the <code>coefficients</code> slot of the fitted
 model</li>
 </ul>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Predict method</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(GammaFit)</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [1] 21.69333 21.15566 25.92103 20.27496 17.15124 19.83386 14.55730 22.26169</span></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [9] 23.89767 18.75674 19.10374 15.10160 16.07372 16.13726 12.20297 11.70443</span></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [17] 11.60706 27.90334 30.14896 30.14451 23.41000 17.02230 17.63782 13.90043</span></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [25] 16.06923 28.65170 26.61054 28.59460 17.89013 19.53099 14.11845 23.30350</span></span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Accessing coefficients matrix</span></span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>GammaFit<span class="sc">$</span>coefficients</span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                  Estimate           SE           t   p.values</span></span>
-<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; (Intercept)  2.754211e+00 0.6933540659  3.97230023 0.00069416</span></span>
-<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; cyl          7.509180e-03 0.0387101010  0.19398501 0.84805180</span></span>
-<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; disp         6.521183e-05 0.0006614834  0.09858423 0.92240336</span></span>
-<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; hp          -8.897889e-04 0.0008063589 -1.10346503 0.28231007</span></span>
-<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; drat         2.366270e-02 0.0605780301  0.39061524 0.70001605</span></span>
-<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; wt          -1.655137e-01 0.0701735211 -2.35863431 0.02811042</span></span>
-<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; qsec         3.055119e-02 0.0270721947  1.12850802 0.27183333</span></span>
-<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; vs          -1.140739e-03 0.0779559038 -0.01463313 0.98846300</span></span>
-<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; am           5.420526e-02 0.0761831300  0.71151268 0.48459603</span></span>
-<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; gear         6.013892e-02 0.0553138294  1.08723110 0.28925667</span></span>
-<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; carb        -2.277255e-02 0.0306989241 -0.74180288 0.46642281</span></span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="co"># Predict method</span></span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a><span class="fu">predict</span>(GammaFit)</span>
+<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a><span class="co">#&gt;  [1] 21.69333 21.15566 25.92103 20.27496 17.15124 19.83386 14.55730 22.26169</span></span>
+<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a><span class="co">#&gt;  [9] 23.89767 18.75674 19.10374 15.10160 16.07372 16.13726 12.20297 11.70443</span></span>
+<span id="cb10-5"><a href="#cb10-5" tabindex="-1"></a><span class="co">#&gt; [17] 11.60706 27.90334 30.14896 30.14451 23.41000 17.02230 17.63782 13.90043</span></span>
+<span id="cb10-6"><a href="#cb10-6" tabindex="-1"></a><span class="co">#&gt; [25] 16.06923 28.65170 26.61054 28.59460 17.89013 19.53099 14.11845 23.30350</span></span>
+<span id="cb10-7"><a href="#cb10-7" tabindex="-1"></a></span>
+<span id="cb10-8"><a href="#cb10-8" tabindex="-1"></a><span class="co"># Accessing coefficients matrix</span></span>
+<span id="cb10-9"><a href="#cb10-9" tabindex="-1"></a>GammaFit<span class="sc">$</span>coefficients</span>
+<span id="cb10-10"><a href="#cb10-10" tabindex="-1"></a><span class="co">#&gt;                  Estimate           SE           t   p.values</span></span>
+<span id="cb10-11"><a href="#cb10-11" tabindex="-1"></a><span class="co">#&gt; (Intercept)  2.754211e+00 0.6933540659  3.97230023 0.00069416</span></span>
+<span id="cb10-12"><a href="#cb10-12" tabindex="-1"></a><span class="co">#&gt; cyl          7.509180e-03 0.0387101010  0.19398501 0.84805180</span></span>
+<span id="cb10-13"><a href="#cb10-13" tabindex="-1"></a><span class="co">#&gt; disp         6.521183e-05 0.0006614834  0.09858423 0.92240336</span></span>
+<span id="cb10-14"><a href="#cb10-14" tabindex="-1"></a><span class="co">#&gt; hp          -8.897889e-04 0.0008063589 -1.10346503 0.28231007</span></span>
+<span id="cb10-15"><a href="#cb10-15" tabindex="-1"></a><span class="co">#&gt; drat         2.366270e-02 0.0605780301  0.39061524 0.70001605</span></span>
+<span id="cb10-16"><a href="#cb10-16" tabindex="-1"></a><span class="co">#&gt; wt          -1.655137e-01 0.0701735211 -2.35863431 0.02811042</span></span>
+<span id="cb10-17"><a href="#cb10-17" tabindex="-1"></a><span class="co">#&gt; qsec         3.055119e-02 0.0270721947  1.12850802 0.27183333</span></span>
+<span id="cb10-18"><a href="#cb10-18" tabindex="-1"></a><span class="co">#&gt; vs          -1.140739e-03 0.0779559038 -0.01463313 0.98846300</span></span>
+<span id="cb10-19"><a href="#cb10-19" tabindex="-1"></a><span class="co">#&gt; am           5.420526e-02 0.0761831300  0.71151268 0.48459603</span></span>
+<span id="cb10-20"><a href="#cb10-20" tabindex="-1"></a><span class="co">#&gt; gear         6.013892e-02 0.0553138294  1.08723110 0.28925667</span></span>
+<span id="cb10-21"><a href="#cb10-21" tabindex="-1"></a><span class="co">#&gt; carb        -2.277255e-02 0.0306989241 -0.74180288 0.46642281</span></span></code></pre></div>
 </div>
 
 
