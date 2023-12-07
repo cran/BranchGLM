@@ -18,8 +18,8 @@ GammaFit <- BranchGLM(mpg ~ ., data = cars, family = "gamma", link = "inverse")
 forwardVS <- VariableSelection(GammaFit, type = "forward")
 forwardVS
 
-## Getting final model
-fit(forwardVS, which = 1)
+## Getting final coefficients
+coef(forwardVS, which = 1)
 
 
 
@@ -28,8 +28,8 @@ fit(forwardVS, which = 1)
 backwardVS <- VariableSelection(GammaFit, type = "backward")
 backwardVS
 
-## Getting final model
-fit(backwardVS, which = 1)
+## Getting final coefficients
+coef(backwardVS, which = 1)
 
 
 ## -----------------------------------------------------------------------------
@@ -37,8 +37,8 @@ fit(backwardVS, which = 1)
 VS <- VariableSelection(GammaFit, type = "branch and bound", showprogress = FALSE)
 VS
 
-## Getting final model
-fit(VS, which = 1)
+## Getting final coefficients
+coef(VS, which = 1)
 
 
 ## -----------------------------------------------------------------------------
@@ -48,8 +48,8 @@ formulaVS <- VariableSelection(mpg ~ . ,data = cars, family = "gamma",
                                showprogress = FALSE, metric = "AIC")
 formulaVS
 
-## Getting final model
-fit(formulaVS, which = 1)
+## Getting final coefficients
+coef(formulaVS, which = 1)
 
 
 ## ---- fig.height = 4, fig.width = 6-------------------------------------------
@@ -63,8 +63,8 @@ formulaVS
 ## Plotting results
 plot(formulaVS, type = "b")
 
-## Getting best model
-fit(formulaVS, which = 1)
+## Getting all coefficients
+coef(formulaVS, which = "all")
 
 
 ## ---- fig.height = 4, fig.width = 6-------------------------------------------
@@ -90,7 +90,7 @@ keepVS
 ## Getting summary and plotting results
 plot(keepVS, type = "b")
 
-## Getting final model
-fit(keepVS, which = 1)
+## Getting coefficients for top 10 models
+coef(keepVS, which = "all")
 
 
