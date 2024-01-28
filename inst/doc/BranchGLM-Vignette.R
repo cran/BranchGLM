@@ -66,7 +66,7 @@ Cindex(catFit)
 AUC(catFit)
 
 
-## ---- fig.width = 4, fig.height = 4-------------------------------------------
+## ----fig.width = 4, fig.height = 4--------------------------------------------
 # Showing ROC plots for logit, probit, and cloglog
 probitFit <- BranchGLM(supp ~ . ,data = Data, family = "binomial", 
                        link = "probit")
