@@ -4,7 +4,7 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 
-## -----------------------------------------------------------------------------
+## ----fig.height = 4, fig.width = 6--------------------------------------------
 # Loading BranchGLM package
 library(BranchGLM)
 
@@ -21,15 +21,20 @@ forwardVS
 ## Getting final coefficients
 coef(forwardVS, which = 1)
 
+## Plotting path
+plot(forwardVS)
 
 
-## -----------------------------------------------------------------------------
+## ----fig.height = 4, fig.width = 6--------------------------------------------
 # Backward elimination with mtcars
 backwardVS <- VariableSelection(GammaFit, type = "backward")
 backwardVS
 
 ## Getting final coefficients
 coef(backwardVS, which = 1)
+
+## Plotting path
+plot(backwardVS)
 
 
 ## -----------------------------------------------------------------------------
