@@ -37,6 +37,30 @@ coef(backwardVS, which = 1)
 plot(backwardVS)
 
 
+## ----fig.height = 4, fig.width = 6--------------------------------------------
+# Fast backward elimination with mtcars
+fastbackwardVS <- VariableSelection(GammaFit, type = "fast backward")
+fastbackwardVS
+
+## Getting final coefficients
+coef(fastbackwardVS, which = 1)
+
+## Plotting path
+plot(fastbackwardVS)
+
+
+## ----fig.height = 4, fig.width = 6--------------------------------------------
+# Fast double backward elimination with mtcars
+fastdoublebackwardVS <- VariableSelection(GammaFit, type = "fast double backward")
+fastdoublebackwardVS
+
+## Getting final coefficients
+coef(fastdoublebackwardVS, which = 1)
+
+## Plotting path
+plot(fastdoublebackwardVS)
+
+
 ## -----------------------------------------------------------------------------
 # Branch and bound with mtcars
 VS <- VariableSelection(GammaFit, type = "branch and bound", showprogress = FALSE)
